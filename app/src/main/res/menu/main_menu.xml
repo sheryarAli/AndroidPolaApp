@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<item android:icon="@drawable/ic_search"
+    android:id="@+id/searchAction"
+    android:title="@string/search_action"
+    app:showAsAction="ifRoom"
+    />
+    <item android:icon="@drawable/ic_camera2"
+    android:id="@+id/takePhotoAction"
+    android:title="@string/take_photo_action"
+    app:showAsAction="ifRoom"
+    />
+
+</menu>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Polaroid</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="dashboard_fragment">Dashboard</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="featured_fragment">Featured</string>
+    <string name="popular_fragment">Popular</string>
+    <string name="take_photo_action">Take Photo</string>
+    <string name="search_action">sSearch</string>
+</resources>
