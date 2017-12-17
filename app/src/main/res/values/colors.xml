@@ -5,5 +5,8 @@
     <color name="colorAccent">#316fb3</color>
     <color name="tabBackground">#EBEAEB</color>
     <color name="red">@android:color/holo_red_light</color>
+    <color name="textColor1">#000000</color>
+    <color name="textColor2">#FFFEFF</color>
+    <color name="textBackgroundColor1">#9F7C34</color>
 
 </resources>

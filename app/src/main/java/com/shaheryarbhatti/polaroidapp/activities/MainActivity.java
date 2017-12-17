@@ -1,18 +1,14 @@
 package com.shaheryarbhatti.polaroidapp.activities;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.shaheryarbhatti.polaroidapp.R;
@@ -27,34 +23,22 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     private final String TAG = "MainActivity";
     private TabLayout tabs;
     private ViewPager viewPager;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Intent intent = new Intent(this, ItemSelelectedActivity.class);
-//        this.startActivity(intent);
-
-        getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(Color.parseColor("#0971B8")));
-        getSupportActionBar().setElevation(0);
 
         tabs = (TabLayout) findViewById(R.id.tabs);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        View root = tabs.getChildAt(0);
-        if (root instanceof LinearLayout) {
-            ((LinearLayout) root).setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-            GradientDrawable drawable = new GradientDrawable();
-            drawable.setColor(getResources().getColor(R.color.colorPrimary));
-            drawable.setSize(2, 1);
-            ((LinearLayout) root).setDividerPadding(10);
-            ((LinearLayout) root).setDividerDrawable(drawable);
-        }
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         MainFragmentPagerAdapter adapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
-
     }
 
     @Override
