@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         MainFragmentPagerAdapter adapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
+
+
     }
 
     @Override
