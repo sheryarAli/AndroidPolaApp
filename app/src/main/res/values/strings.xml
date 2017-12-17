@@ -9,4 +9,6 @@
     <string name="popular_fragment">Popular</string>
     <string name="take_photo_action">Take Photo</string>
     <string name="search_action">sSearch</string>
+    <string name="save_draw">Save And Draw</string>
+    <string name="draw">Let\'s Draw</string>
 </resources>
