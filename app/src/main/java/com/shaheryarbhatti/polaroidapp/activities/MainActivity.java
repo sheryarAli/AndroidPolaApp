@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     private ViewPager viewPager;
     private Toolbar toolbar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
