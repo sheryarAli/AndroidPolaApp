@@ -15,10 +15,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".activities.ItemSelelectedActivity">
 
         </activity>
+        <activity android:name=".activities.ItemSelelectedActivity"></activity>
+        <activity android:name=".activities.DrawingBoardActivity"></activity>
     </application>
 
 </manifest>
