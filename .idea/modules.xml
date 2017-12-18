@@ -3,9 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidPolaApp.iml" filepath="$PROJECT_DIR$/AndroidPolaApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/PolaroidApp.iml" filepath="$PROJECT_DIR$/PolaroidApp.iml" />
+      <module fileurl="file://E:\Users\Shaheryar\AndroidstudioProjects\AndroidPolaApp\AndroidPolaApp.iml" filepath="E:\Users\Shaheryar\AndroidstudioProjects\AndroidPolaApp\AndroidPolaApp.iml" />
       <module fileurl="file://F:\polaroid App\AndroidPolaApp\PolaroidApp.iml" filepath="F:\polaroid App\AndroidPolaApp\PolaroidApp.iml" />
+      <module fileurl="file://E:\Users\Shaheryar\AndroidstudioProjects\AndroidPolaApp\PolaroidApp.iml" filepath="E:\Users\Shaheryar\AndroidstudioProjects\AndroidPolaApp\PolaroidApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://E:\Users\Shaheryar\AndroidstudioProjects\AndroidPolaApp\app\app.iml" filepath="E:\Users\Shaheryar\AndroidstudioProjects\AndroidPolaApp\app\app.iml" />
     </modules>
   </component>
 </project>

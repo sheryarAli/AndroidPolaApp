@@ -9,13 +9,13 @@
         layout="@layout/toolbar" />
 
     <ImageView
-        android:id="@+id/drawingBoardView"
+        android:id="@+id/drawingBoardImageView"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:scaleType="matrix"
         android:layout_above="@id/buttonLayout"
-        android:contentDescription="TODO" />
+        android:layout_below="@+id/toolbar"
+        android:contentDescription="TODO"
+        android:scaleType="matrix" />
     <!--android:src="@android:drawable/ic_menu_gallery"-->
     <android.support.constraint.ConstraintLayout
         android:layout_alignParentBottom="true"
@@ -53,7 +53,7 @@
 
             <ImageButton
 
-                android:id="@+id/zoonOutButton"
+                android:id="@+id/zoomOutButton"
                 android:layout_width="35dp"
                 android:layout_height="36dp"
                 android:layout_weight="1"
@@ -62,7 +62,7 @@
                 app:srcCompat="@drawable/ic_minus_square" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/zoomText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -73,7 +73,7 @@
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/zoonInButton"
+                android:id="@+id/zoomInButton"
                 android:layout_width="35dp"
                 android:layout_height="36dp"
                 android:layout_weight="1"
