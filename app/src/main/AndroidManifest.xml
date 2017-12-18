@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.DrawingBoardActivity">
+        <activity android:name=".activities.PhotoViewStencilActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +18,7 @@
         </activity>
         <activity android:name=".activities.ItemSelelectedActivity"></activity>
         <activity android:name=".activities.MainActivity"></activity>
-        <activity android:name=".activities.PhotoViewStencilActivity"></activity>
+        <activity android:name=".activities.DrawingBoardActivity"></activity>
     </application>
 
 </manifest>
