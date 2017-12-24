@@ -8,19 +8,19 @@ import java.io.Serializable;
 
 public class Comment implements Serializable {
     private String userName;
-    private int userProfilePicture;
+    private String userPicture;
     private String professon;
-    private String commentDate;
+    private String commentDuration;
     private String commentText;
 
     public Comment() {
     }
 
-    public Comment(String userName, int userProfilePicture, String professon, String commentDate, String commentText) {
+    public Comment(String userName, String userPicture, String professon, String commentDuration, String commentText) {
         this.userName = userName;
-        this.userProfilePicture = userProfilePicture;
+        this.userPicture = userPicture;
         this.professon = professon;
-        this.commentDate = commentDate;
+        this.commentDuration = commentDuration;
         this.commentText = commentText;
     }
 
@@ -32,12 +32,12 @@ public class Comment implements Serializable {
         this.userName = userName;
     }
 
-    public int getUserProfilePicture() {
-        return userProfilePicture;
+    public String getUserPicture() {
+        return userPicture;
     }
 
-    public void setUserProfilePicture(int userProfilePicture) {
-        this.userProfilePicture = userProfilePicture;
+    public void setUserPicture(String userPicture) {
+        this.userPicture = userPicture;
     }
 
     public String getProfesson() {
@@ -48,12 +48,12 @@ public class Comment implements Serializable {
         this.professon = professon;
     }
 
-    public String getCommentDate() {
-        return commentDate;
+    public String getCommentDuration() {
+        return commentDuration;
     }
 
-    public void setCommentDate(String commentDate) {
-        this.commentDate = commentDate;
+    public void setCommentDuration(String commentDuration) {
+        this.commentDuration = commentDuration;
     }
 
     public String getCommentText() {

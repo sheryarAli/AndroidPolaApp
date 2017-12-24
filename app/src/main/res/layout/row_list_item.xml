@@ -1,151 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.constraint.ConstraintLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layoutRoot"
+
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:paddingBottom="8dp">
 
-    <android.support.constraint.ConstraintLayout
+    <ImageView
+        android:background="@color/colorPrimary"
+        android:id="@+id/profileImageView"
+        android:layout_width="50dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_man_1" />
 
+    <TextView
+        android:id="@+id/personNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:foregroundGravity="top"
+        android:gravity="top"
+
+        android:includeFontPadding="false"
+        android:text="Person Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/textColor1"
+        app:layout_constraintStart_toEndOf="@+id/profileImageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/professoinText"
+        android:layout_width="wrap_content"
+        android:layout_height="17dp"
+        android:layout_marginTop="19dp"
+        android:background="@color/textBackgroundColor1"
+        android:foregroundGravity="bottom"
+        android:includeFontPadding="false"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:text="Profession"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/textColor2"
+        app:layout_constraintStart_toEndOf="@+id/profileImageView"
+        app:layout_constraintTop_toBottomOf="@+id/personNameText" />
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Title"
+        android:textColor="@color/textColor1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileImageView" />
+
+    <TextView
+        android:id="@+id/durationText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="28dp"
+        android:text="Duration"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardImageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="6dp"
+        app:cardPreventCornerOverlap="true">
 
         <ImageView
-            android:scaleType="fitXY"
-            android:id="@+id/profileImageView"
-            android:layout_width="37dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            app:srcCompat="@drawable/ic_man_1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/personNameText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="Person Name"
-            android:textColor="@color/textColor1"
-            android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/profileImageView"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/professoinText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="21dp"
-            android:background="@color/textBackgroundColor1"
-            android:foregroundGravity="bottom"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp"
-            android:text="Profession"
-            android:textColor="@color/textColor2"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/profileImageView"
-            app:layout_constraintTop_toBottomOf="@+id/personNameText" />
-
-        <TextView
-            android:id="@+id/titleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:text="Title"
-            android:textColor="@color/textColor1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profileImageView" />
-
-        <TextView
-            android:id="@+id/durationText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="28dp"
-            android:text="Duration"
-            android:textSize="10sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:scaleType="fitXY"
             android:id="@+id/postImageView"
             android:layout_width="match_parent"
             android:layout_height="230dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleText"
-            app:srcCompat="@drawable/sample_image2" />
-
-        <TextView
-            android:id="@+id/madeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:text="0"
-            android:textColor="@color/textColor1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postImageView" />
-
-        <ImageView
-            android:id="@+id/madeImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/madeText"
-            app:layout_constraintTop_toBottomOf="@+id/postImageView"
-            app:srcCompat="@drawable/ic_pencil" />
-
-        <TextView
-            android:id="@+id/commentText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:text="0"
-            android:textColor="@color/textColor1"
-            app:layout_constraintEnd_toStartOf="@+id/madeImageView"
-            app:layout_constraintTop_toBottomOf="@+id/postImageView" />
-
-        <ImageView
-            android:id="@+id/commentImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/commentText"
-            app:layout_constraintTop_toBottomOf="@+id/postImageView"
-            app:srcCompat="@drawable/ic_add_comment_button" />
-
-        <TextView
-            android:id="@+id/likeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:text="0"
-            android:textColor="@color/textColor1"
-            app:layout_constraintEnd_toStartOf="@+id/commentImageView"
-            app:layout_constraintTop_toBottomOf="@+id/postImageView" />
-
-        <ImageView
-            android:id="@+id/likeImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/likeText"
-            app:layout_constraintTop_toBottomOf="@+id/postImageView"
-            app:srcCompat="@drawable/ic_like" />
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/boat" />
+    </android.support.v7.widget.CardView>
 
 
-    </android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/madeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        android:textColor="@color/textColor1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardImageView" />
 
-</android.support.v7.widget.CardView>
+    <ImageView
+        android:id="@+id/madeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/madeText"
+        app:layout_constraintTop_toBottomOf="@+id/cardImageView"
+        app:srcCompat="@drawable/ic_pencil" />
+
+    <TextView
+        android:id="@+id/commentText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        android:textColor="@color/textColor1"
+        app:layout_constraintEnd_toStartOf="@+id/madeImageView"
+        app:layout_constraintTop_toBottomOf="@+id/cardImageView" />
+
+    <ImageView
+        android:id="@+id/commentImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/commentText"
+        app:layout_constraintTop_toBottomOf="@+id/cardImageView"
+        app:srcCompat="@drawable/ic_add_comment_button" />
+
+    <TextView
+        android:id="@+id/likeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        android:textColor="@color/textColor1"
+        app:layout_constraintEnd_toStartOf="@+id/commentImageView"
+        app:layout_constraintTop_toBottomOf="@+id/cardImageView" />
+
+    <ImageView
+        android:id="@+id/likeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/likeText"
+        app:layout_constraintTop_toBottomOf="@+id/cardImageView"
+        app:srcCompat="@drawable/ic_like" />
+
+    <ImageView
+        android:visibility="invisible"
+        android:id="@+id/shareView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardImageView"
+        app:srcCompat="@drawable/ic_share" />
+
+    <!-- <Button
+         android:visibility="invisible"
+         android:textColor="@android:color/white"
+         android:background="@drawable/button_effect"
+         android:id="@+id/drawBtn"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_marginEnd="16dp"
+         android:layout_marginStart="16dp"
+         android:layout_marginTop="40dp"
+         android:text="Let's Draw"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/cardImageView" />-->
+
+
+</android.support.constraint.ConstraintLayout>
+
+    <!--</android.support.v7.widget.CardView>-->

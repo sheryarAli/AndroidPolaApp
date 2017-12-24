@@ -9,24 +9,24 @@ import java.util.ArrayList;
 
 public class Made implements Serializable {
     // TODO madeSource to String
-    private int madeSource;
+    private String madeSource;
     private int madeLikes;
     private ArrayList<Comment> madeCommments;
 
     public Made() {
     }
 
-    public Made(int madeSource, int madeLikes, ArrayList<Comment> madeCommments) {
+    public Made(String madeSource, int madeLikes, ArrayList<Comment> madeCommments) {
         this.madeSource = madeSource;
         this.madeLikes = madeLikes;
         this.madeCommments = madeCommments;
     }
 
-    public int getMadeSource() {
+    public String getMadeSource() {
         return madeSource;
     }
 
-    public void setMadeSource(int madeSource) {
+    public void setMadeSource(String madeSource) {
         this.madeSource = madeSource;
     }
 

@@ -11,6 +11,8 @@
     <color name="backgroundColor1">#E8E9F5</color>
     <color name="seekbarProgressColor">#2195f2</color>
     <color name="seekbarProgBackColor">#e7e9f5</color>
+    <color name="buttonDisabledColor">#9CC8F5</color>
+    <color name="buttonPressedColor">#c9ccf2</color>
 
 
 </resources>

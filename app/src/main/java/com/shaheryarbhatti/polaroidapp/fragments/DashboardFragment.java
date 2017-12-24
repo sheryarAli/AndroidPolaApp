@@ -1,23 +1,24 @@
 package com.shaheryarbhatti.polaroidapp.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.adapters.GenericAdapter;
+import com.shaheryarbhatti.polaroidapp.dataclasses.DummyData;
 import com.shaheryarbhatti.polaroidapp.dataclasses.Post;
-import com.shaheryarbhatti.polaroidapp.utilities.Util;
+import com.shaheryarbhatti.polaroidapp.utilities.UtilImage;
 
 import java.util.ArrayList;
 
@@ -33,13 +34,14 @@ import java.util.ArrayList;
 public class DashboardFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private final String TAG = "DashboardFragment";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private RecyclerView dashboardRecylcerView;
     private GenericAdapter<Post> postAdapter;
     private ArrayList<Post> postList;
     private LinearLayoutManager linearLayoutManager;
-    private String dummyString = "{“posts”: [ { \"userType\": 1, \"userName\": “jason\", \"userPicture”:”Jason” , \"profession\": \"Artist\", \"sourceType\": 0, \"source\": “boat”, \"titleText\": \"test\", \"postDate\": “09-12-2017”, \"postLikes\": 25,  \"Comments\": [ { \"userName\" : \"Clarke\", \"userPicture\" : “clarke”, \"profession\": “Designer” , \"commentDate\" : \" \", \"commentText\" : \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.”}],\"Made\":[ { \"madeSource\" : \"\", \"madeLikes\": 30, \"madeComments\" : \"\"} ]} ]}";
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -69,6 +71,7 @@ public class DashboardFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,9 +79,12 @@ public class DashboardFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
 //        iniilizing post array list
         postList = new ArrayList<>();
-//        DummyData dummyData = new Gson().fromJson(dummyString, DummyData);
+        postList.addAll(new DummyData().getDashboardPosts(getContext()));
+        Log.d(TAG, "onCreate: For Debugging");
     }
 
 
@@ -96,14 +102,36 @@ public class DashboardFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getContext());
         dashboardRecylcerView = (RecyclerView) view.findViewById(R.id.dashboardRecylcerView);
 
+        prepareDashboardRecylcerView();
 
     }
+
+    private void onPostViewClicked(View view, Post post) {
+
+        onButtonPressed(post);
+
+    }
+
+    private void onLikeViewClicked(View view) {
+        Toast.makeText(getContext(), "Perform Like", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void onCommentViewClicked(View view, Post post) {
+        onButtonPressed(post);
+
+    }
+
+    private void onMadeViewClicked(View view, Post post) {
+        onButtonPressed(post);
+    }
+
+
 
 
     private void prepareDashboardRecylcerView() {
         dashboardRecylcerView.setLayoutManager(linearLayoutManager);
-        //TODO popuplate postList
-        /*postList*/
+
         postAdapter = new GenericAdapter<Post>(getContext(), postList) {
             @Override
             public RecyclerView.ViewHolder setViewHolder(ViewGroup parent) {
@@ -114,13 +142,49 @@ public class DashboardFragment extends Fragment {
             }
 
             @Override
-            public void onBindData(RecyclerView.ViewHolder holder, Post val, int position) {
+            public void onBindData(RecyclerView.ViewHolder holder, final Post val, int position) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.profileImageView.setImageBitmap(Util.getBitmapFromResource(getContext(), val.getUserProfilePicture()));
+                itemViewHolder.profileImageView.setImageBitmap(UtilImage.getBitmap(getContext(), val.getUserPicture()));
+                itemViewHolder.professoinText.setText(val.getProfession());
+                itemViewHolder.titleText.setText("test");
+                itemViewHolder.personNameText.setText(val.getUserName());
+                itemViewHolder.durationText.setText(val.getPostDuration());
+                itemViewHolder.likeText.setText(val.getPostLikes() + "");
+
+                Log.d(TAG, "onBindData: SourceType:" + val.getSourceType());
+                Log.d(TAG, "onBindData: source: " + val.getSource());
                 if (val.getSourceType() == 1) {
-                    itemViewHolder.postImageView.setImageBitmap(Util.getBitmapFromResource(getContext(), val.getSource()));
+                    UtilImage.loadImageWithPicasso(context, itemViewHolder.postImageView, val.getSource());
 
                 }
+
+                itemViewHolder.postImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onPostViewClicked(v, val);
+                    }
+                });
+
+                itemViewHolder.likeImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onLikeViewClicked(v);
+                    }
+                });
+
+                itemViewHolder.madeImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onMadeViewClicked(v, val);
+                    }
+                });
+
+                itemViewHolder.commentImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onCommentViewClicked(v, val);
+                    }
+                });
 
             }
 
@@ -134,8 +198,9 @@ public class DashboardFragment extends Fragment {
 
     }
 
+
     private class ItemViewHolder extends RecyclerView.ViewHolder {
-        private CardView layoutRoot;
+        private View layoutRoot;
         private ImageView profileImageView, postImageView, madeImageView, commentImageView, likeImageView;
         private TextView professoinText, personNameText,
                 durationText, commentText, madeText,
@@ -143,7 +208,7 @@ public class DashboardFragment extends Fragment {
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            layoutRoot = (CardView) itemView;
+            layoutRoot = itemView;
             profileImageView = (ImageView) layoutRoot.findViewById(R.id.profileImageView);
             postImageView = (ImageView) layoutRoot.findViewById(R.id.postImageView);
             madeImageView = (ImageView) layoutRoot.findViewById(R.id.madeImageView);
@@ -161,9 +226,11 @@ public class DashboardFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(Post post) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            Bundle args = new Bundle();
+            args.putSerializable("post", post);
+            mListener.onDashboardFragmentInteraction(args);
         }
     }
 
@@ -196,6 +263,6 @@ public class DashboardFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onDashboardFragmentInteraction(Bundle args);
     }
 }

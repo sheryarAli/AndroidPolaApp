@@ -1,10 +1,12 @@
 package com.shaheryarbhatti.polaroidapp.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +27,9 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     private ViewPager viewPager;
     private Toolbar toolbar;
 
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,15 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onDashboardFragmentInteraction(Bundle args) {
+
+        Intent intent = new Intent(MainActivity.this, ItemSelelectedActivity.class);
+        intent.putExtra("post", args);
+        startActivity(intent);
 
     }
 }

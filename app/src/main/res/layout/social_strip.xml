@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:backgroundTint="@android:color/white">
+
+
+    <ImageButton
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/ic_share" />
+
+    <ImageButton
+        android:id="@+id/madeBtn"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/ic_pencil" />
+
+    <TextView
+        android:id="@+id/madeText"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginRight="@dimen/spacing_large"
+        android:gravity="center_vertical"
+        android:text="12"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <ImageButton
+        android:id="@+id/likeBtn"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/ic_like" />
+
+    <TextView
+        android:id="@+id/likeText"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginRight="@dimen/spacing_large"
+        android:gravity="center_vertical"
+        android:text="12"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+
+    <ImageButton
+        android:id="@+id/commentBtn"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/ic_add_comment_button" />
+
+    <TextView
+        android:id="@+id/commentText"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginRight="@dimen/spacing_large"
+        android:gravity="center_vertical"
+        android:text="12"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+
+</LinearLayout>

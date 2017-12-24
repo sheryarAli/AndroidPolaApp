@@ -8,7 +8,7 @@
 
 
     <ImageView
-        android:id="@+id/user_image"
+        android:id="@+id/userImageView"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginLeft="10dp"
@@ -16,11 +16,11 @@
         app:srcCompat="@drawable/ic_search" />
 
     <TextView
-        android:id="@+id/user_type"
+        android:id="@+id/userTypeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/user_image"
-        android:layout_toEndOf="@+id/user_image"
+        android:layout_alignBottom="@+id/userImageView"
+        android:layout_toEndOf="@+id/userImageView"
         android:background="#A77A23"
         android:text="ARTIST"
         android:textColor="#FFFFF1"
@@ -30,13 +30,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_toEndOf="@+id/user_image"
+        android:layout_toEndOf="@+id/userImageView"
         android:text="Andrew Clarke"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/time"
+        android:id="@+id/timeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -45,19 +45,19 @@
         android:textColor="@color/colorPrimary" />
 
     <TextView
-        android:id="@+id/description"
+        android:id="@+id/descriptionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/user_image"
+        android:layout_below="@+id/userImageView"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
         android:text="How to make a tree!" />
 
     <ImageView
-        android:id="@+id/main_image"
+        android:id="@+id/postImageView"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:layout_below="@+id/description"
+        android:layout_below="@+id/descriptionText"
         android:layout_marginTop="2dp"
         android:background="@color/colorPrimary" />
 

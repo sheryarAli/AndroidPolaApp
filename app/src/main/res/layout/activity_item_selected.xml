@@ -1,50 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:text="How to make a tree!" />
-
-    <ImageView
-        android:id="@+id/main_image"
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_below="@+id/description"
-        android:layout_marginTop="2dp"
-        android:background="@color/colorPrimary" />
+        android:layout_height="?attr/actionBarSize" />
 
 
-    <TextView
-        android:id="@+id/comments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/main_image"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="50dp"
-        android:text="COMMENTS" />
-
-
-    <View
-        android:id="@+id/border"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/comments"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:background="@android:color/darker_gray"
-        android:padding="1dp" />
+        android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/comments_recycler_view"
-        android:layout_below="@id/border"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
-</RelativeLayout>
+
+            <TextView
+                android:id="@+id/descriptionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:text="How to make a tree!" />
+
+            <ImageView
+                android:id="@+id/postImageView"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/colorPrimary"
+                android:scaleType="fitXY" />
+
+            <include
+                android:id="@+id/socialContainer"
+                layout="@layout/social_strip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/drawBtn"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/button_effect"
+                android:text="@string/draw"
+                android:textColor="@android:color/white" />
+
+            <include
+                android:id="@+id/commentSectionView"
+                layout="@layout/layout_recycler_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+
+            <include
+                android:id="@+id/madeSectionView"
+                layout="@layout/layout_recycler_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

@@ -15,7 +15,7 @@ public class Post implements Serializable {
     @SerializedName("userName")
     private String userName;
     @SerializedName("userPicture")
-    private String userProfilePicture;
+    private String userPicture;
     @SerializedName("profession")
     private String profession;
     @SerializedName("sourceType")
@@ -24,33 +24,33 @@ public class Post implements Serializable {
     private String source;
     @SerializedName("titleText")
     private String titleText;
-    @SerializedName("postDate")
-    private String postDate;
+    @SerializedName("postDuration")
+    private String postDuration;
     @SerializedName("postLikes")
     private int postLikes;
 
-    @SerializedName("Comments")
-    private ArrayList<Comment> postComments;
-    @SerializedName("Made")
-    private ArrayList<Made> madeList;
+    @SerializedName("comments")
+    private ArrayList<Comment> comments;
+    @SerializedName("made")
+    private ArrayList<Made> made;
 
     public Post() {
     }
 
-    public Post(int userType, String userName, String userProfilePicture, String profession,
-                int sourceType, String source, String titleText, String postDate, int postLikes,
-                ArrayList<Comment> postComments, ArrayList<Made> madeList) {
+    public Post(int userType, String userName, String userPicture, String profession,
+                int sourceType, String source, String titleText, String postDuration, int postLikes,
+                ArrayList<Comment> comments, ArrayList<Made> made) {
         this.userType = userType;
         this.userName = userName;
-        this.userProfilePicture = userProfilePicture;
+        this.userPicture = userPicture;
         this.profession = profession;
         this.sourceType = sourceType;
         this.source = source;
         this.titleText = titleText;
-        this.postDate = postDate;
+        this.postDuration = postDuration;
         this.postLikes = postLikes;
-        this.postComments = postComments;
-        this.madeList = madeList;
+        this.comments = comments;
+        this.made = made;
     }
 
     public int getUserType() {
@@ -69,12 +69,12 @@ public class Post implements Serializable {
         this.userName = userName;
     }
 
-    public String getUserProfilePicture() {
-        return userProfilePicture;
+    public String getUserPicture() {
+        return userPicture;
     }
 
-    public void setUserProfilePicture(String userProfilePicture) {
-        this.userProfilePicture = userProfilePicture;
+    public void setUserPicture(String userPicture) {
+        this.userPicture = userPicture;
     }
 
     public String getProfession() {
@@ -109,12 +109,12 @@ public class Post implements Serializable {
         this.titleText = titleText;
     }
 
-    public String getPostDate() {
-        return postDate;
+    public String getPostDuration() {
+        return postDuration;
     }
 
-    public void setPostDate(String postDate) {
-        this.postDate = postDate;
+    public void setPostDuration(String postDuration) {
+        this.postDuration = postDuration;
     }
 
     public int getPostLikes() {
@@ -125,19 +125,19 @@ public class Post implements Serializable {
         this.postLikes = postLikes;
     }
 
-    public ArrayList<Comment> getPostComments() {
-        return postComments;
+    public ArrayList<Comment> getComments() {
+        return comments;
     }
 
-    public void setPostComments(ArrayList<Comment> postComments) {
-        this.postComments = postComments;
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
     }
 
-    public ArrayList<Made> getMadeList() {
-        return madeList;
+    public ArrayList<Made> getMade() {
+        return made;
     }
 
-    public void setMadeList(ArrayList<Made> madeList) {
-        this.madeList = madeList;
+    public void setMade(ArrayList<Made> made) {
+        this.made = made;
     }
 }
