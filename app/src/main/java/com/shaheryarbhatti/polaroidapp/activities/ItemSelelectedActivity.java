@@ -1,6 +1,8 @@
 package com.shaheryarbhatti.polaroidapp.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,9 +13,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.shaheryarbhatti.polaroidapp.Config;
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.adapters.GenericAdapter;
 import com.shaheryarbhatti.polaroidapp.dataclasses.Comment;
@@ -28,7 +38,7 @@ import java.util.ArrayList;
  * Created by Shahzore on 12/16/2017.
  */
 
-public class ItemSelelectedActivity extends AppCompatActivity {
+public class ItemSelelectedActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener {
     private final String TAG = "ItemSelelectedActivity";
     private Toolbar toolbar;
     private TextView descriptionText;
@@ -43,8 +53,9 @@ public class ItemSelelectedActivity extends AppCompatActivity {
     private GridLayoutManager madeLayoutManager;
     private View commentSectionView, madeSectionView;
     private TextView commentText, madeText;
-
-
+    private FrameLayout videoLayout;
+    private Button letsDrawButton;
+    private ScrollView scroll;
 
 
     @Override
@@ -76,7 +87,11 @@ public class ItemSelelectedActivity extends AppCompatActivity {
         madeText = (TextView) madeSectionView.findViewById(R.id.sectionText);
         commentRecyclerView = (RecyclerView) commentSectionView.findViewById(R.id.sectoinsRecyclerView);
         madeRecyclerView = (RecyclerView) madeSectionView.findViewById(R.id.sectoinsRecyclerView);
-
+        videoLayout = (FrameLayout) findViewById(R.id.frame_fragment);
+        letsDrawButton = (Button) findViewById(R.id.drawBtn);
+        ScrollView scroll = (ScrollView) findViewById(R.id.scrollView);
+        scroll.setFocusableInTouchMode(true);
+        scroll.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
     }
 
     private void prepareViews() {
@@ -85,10 +100,18 @@ public class ItemSelelectedActivity extends AppCompatActivity {
         Bundle data = getIntent().getBundleExtra("post");
         Post post = (Post) data.getSerializable("post");
         descriptionText.setText(post.getTitleText());
-        UtilImage.loadImageWithPicasso(this, postImageView, post.getSource());
         commentList = post.getComments();
         madeList = post.getMade();
         prepareCommentRecylerView();
+        if (post.getSourceType() == 1) {
+            postImageView.setVisibility(View.VISIBLE);
+            videoLayout.setVisibility(View.GONE);
+            letsDrawButton.setVisibility(View.VISIBLE);
+            UtilImage.loadImageWithPicasso(this, postImageView, post.getSource());
+        } else if (post.getSourceType() == 2) {
+            setVideo();
+        }
+
 
 
     }
@@ -121,6 +144,7 @@ public class ItemSelelectedActivity extends AppCompatActivity {
             public void onItemClick(View view) {
 
             }
+
         };
         commentRecyclerView.setAdapter(commentGenericAdapter);
     }
@@ -134,6 +158,7 @@ public class ItemSelelectedActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
 
     private class CommentViewHolder extends RecyclerView.ViewHolder {
         private ImageView userImageView;
@@ -149,5 +174,36 @@ public class ItemSelelectedActivity extends AppCompatActivity {
         }
     }
 
+    private void setVideo() {
+        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+        youTubePlayerFragment.initialize(Config.YOUTUBE_API_KEY, this);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_fragment, youTubePlayerFragment);
+        fragmentTransaction.commit();
+
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
+        youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION |
+                YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE);
+
+        if (!wasRestored) {
+            youTubePlayer.cueVideo("-OQ0QwgHYDo");
+        }
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
+        final int REQUEST_CODE = 1;
+
+        if (error.isUserRecoverableError()) {
+            error.getErrorDialog(this, REQUEST_CODE).show();
+        } else {
+            String errorMessage = String.format("There was an error initializing the YoutubePlayer (%1$s)", error.toString());
+            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+        }
+    }
 
 }

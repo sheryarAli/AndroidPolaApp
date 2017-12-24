@@ -103,7 +103,7 @@
       "userName": "Bale",
       "userPicture": "bale",
       "profession": "Skech Artist",
-      "sourceType": "1",
+      "sourceType": "2",
       "source": "carsusol",
       "titleText": "Interdum et malesuada fames ac ante ipsum primis in faucibus.",
       "postDuration": "30d",

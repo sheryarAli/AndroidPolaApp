@@ -2,9 +2,9 @@
 <LinearLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/toolbar"
@@ -15,12 +15,13 @@
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
+        android:id="@+id/scrollView"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
 
             <TextView
@@ -37,7 +38,16 @@
                 android:layout_height="250dp"
                 android:layout_marginTop="2dp"
                 android:background="@color/colorPrimary"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:visibility="gone" />
+
+            <FrameLayout
+                android:id="@+id/frame_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="2dp">
+
+            </FrameLayout>
 
             <include
                 android:id="@+id/socialContainer"
@@ -53,7 +63,8 @@
                 android:layout_marginStart="16dp"
                 android:background="@drawable/button_effect"
                 android:text="@string/draw"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
 
             <include
                 android:id="@+id/commentSectionView"

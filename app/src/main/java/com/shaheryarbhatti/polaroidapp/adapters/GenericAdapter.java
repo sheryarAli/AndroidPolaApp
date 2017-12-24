@@ -69,4 +69,6 @@ public abstract class GenericAdapter<T> extends RecyclerView.Adapter<RecyclerVie
     public ArrayList<T> getItemList() {
         return items;
     }
+
+
 }

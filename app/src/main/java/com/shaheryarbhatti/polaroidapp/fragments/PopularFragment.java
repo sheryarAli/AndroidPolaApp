@@ -3,11 +3,19 @@ package com.shaheryarbhatti.polaroidapp.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.shaheryarbhatti.polaroidapp.Config;
 import com.shaheryarbhatti.polaroidapp.R;
 
 
@@ -19,7 +27,7 @@ import com.shaheryarbhatti.polaroidapp.R;
  * Use the {@link PopularFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PopularFragment extends Fragment {
+public class PopularFragment extends Fragment implements YouTubePlayer.OnInitializedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,6 +38,7 @@ public class PopularFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
 
     public PopularFragment() {
         // Required empty public constructor
@@ -60,13 +69,29 @@ public class PopularFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragments
+
+        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+        youTubePlayerFragment.initialize(Config.YOUTUBE_API_KEY, this);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_fragment, youTubePlayerFragment);
+        fragmentTransaction.commit();
+
         return inflater.inflate(R.layout.fragment_popular, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -91,6 +116,35 @@ public class PopularFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
+
+        youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION |
+                YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE);
+
+
+        if (!wasRestored) {
+            youTubePlayer.cueVideo("-OQ0QwgHYDo");
+        }
+    }
+
+    /**
+     * @param provider The provider which failed to initialize a YouTubePlayer.
+     * @param error    The reason for this failure, along with potential resolutions to this failure.
+     */
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
+
+        final int REQUEST_CODE = 1;
+
+        if (error.isUserRecoverableError()) {
+            error.getErrorDialog(getActivity(), REQUEST_CODE).show();
+        } else {
+            String errorMessage = String.format("There was an error initializing the YoutubePlayer (%1$s)", error.toString());
+            Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
