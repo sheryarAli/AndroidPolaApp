@@ -21,6 +21,7 @@
         app:srcCompat="@drawable/ic_pencil" />
 
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/madeText"
         android:layout_width="wrap_content"
         android:layout_height="?attr/actionBarSize"
@@ -42,6 +43,7 @@
         app:srcCompat="@drawable/ic_like" />
 
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/likeText"
         android:layout_width="wrap_content"
         android:layout_height="?attr/actionBarSize"
@@ -59,6 +61,7 @@
         app:srcCompat="@drawable/ic_add_comment_button" />
 
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/commentText"
         android:layout_width="wrap_content"
         android:layout_height="?attr/actionBarSize"

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import com.github.chrisbanes.photoview.OnScaleChangedListener;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.shaheryarbhatti.polaroidapp.R;
+import com.shaheryarbhatti.polaroidapp.utilities.UtilImage;
 
 import java.util.Locale;
 
@@ -45,19 +47,26 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
     private boolean isLocked = false;
     Bitmap bm, bitmapScalled, bmScalled, cs, grid;
     Canvas comboImage;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing_board);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         imageView = (ImageView) findViewById(R.id.drawingBoardImageView);
 
         zoomInButton = (ImageButton) findViewById(R.id.zoomInButton);
         zoomOutButton = (ImageButton) findViewById(R.id.zoomOutButton);
         lockBtn = (ImageButton) findViewById(R.id.lockBtn);
         zoomText = (TextView) findViewById(R.id.zoomText);
+        int drawableId = UtilImage.getDrawableId(this, getIntent().getStringExtra("image"));
+//        String imageSource = getI
 
         /*locked = (ImageView) findViewById(R.id.btn_Locked);
         unlocked = (ImageView) findViewById(R.id.btn_unLocked);*/
@@ -75,7 +84,7 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
 //        BitmapFactory.decodeFile(filePath, options);
 
         //System.IO.FileStream fs = new System.IO.FileStream(f.Path, System.IO.FileMode.Open);
-        BitmapFactory.decodeResource(getResources(), R.drawable.sample_image, options);
+        BitmapFactory.decodeResource(getResources(), drawableId, options);
         //fs.Close();
 
 
@@ -86,8 +95,8 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
         options.inSampleSize = (int) getScale(options.outWidth, options.outHeight, getResources().getDisplayMetrics().widthPixels, height);
 
         options.inJustDecodeBounds = false;
-        Drawable d = getResources().getDrawable(R.drawable.sample_image);
-        bm = BitmapFactory.decodeResource(getResources(), R.drawable.sample_image, options);
+        Drawable d = getResources().getDrawable(drawableId);
+        bm = BitmapFactory.decodeResource(getResources(), drawableId, options);
         bm = drawableToBitmap(d);
 
 //        bm = BitmapFactory.decodeFile(filePath, options);
@@ -165,27 +174,7 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
             case R.id.lockBtn:
                 updateLockButton();
                 break;
-            /*case R.id.btn_Locked:
-                unlocked.setVisibility(View.VISIBLE);
-                locked.setVisibility(View.INVISIBLE);
 
-//                home.setVisibility(View.VISIBLE);
-                //zoomInButton.Enabled = true;
-                //zoomOutButton.Enabled = true;
-                break;
-            case R.id.btn_unLocked:
-                unlocked.setVisibility(View.INVISIBLE);
-                locked.setVisibility(View.VISIBLE);
-
-//                home.setVisibility(View.INVISIBLE);
-                //zoomInButton.Enabled = false;
-                //zoomOutButton.Enabled = false;
-                break;*/
-
-            /*case R.id.btn_Home:
-                if (getResources().getDisplayMetrics().widthPixels < 1100)
-                    rainbow.setVisibility(View.INVISIBLE);
-                break;*/
         }
 
     }
@@ -197,6 +186,11 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -241,7 +235,7 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
 
     private float attacherScaleChange() {
 
-        float scale = (float) Math.round(attacher.getScale());
+        float scale = attacher.getScale();
         if (scale > 6) {
             attacher.setScale(6f);
             zoomText.setText(String.format(Locale.ENGLISH, "%.1fx", 6f));
@@ -269,6 +263,6 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onScaleChange(float scaleFactor, float focusX, float focusY) {
         attacherScaleChange();
-        Log.d(TAG, "onScaleChange: " + scaleFactor);
+
     }
 }

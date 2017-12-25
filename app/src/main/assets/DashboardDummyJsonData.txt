@@ -6,7 +6,7 @@
       "userPicture": "jason",
       "profession": "Artist",
       "sourceType": "1",
-      "source": "boat",
+      "source": "castle",
       "titleText": "auris consectetur non nibh eget sodales. Quisque congue mollis porttitor. Morbi finibus nisl tortor, a ultrices nibh scelerisque vitae",
       "postDuration": "10h",
       "postLikes": "10",
@@ -35,8 +35,8 @@
       ],
       "made": [
         {
-          "madeSource": "",
-          "madeLikes": "1",
+          "madeSource": "castle_made1",
+          "madeLikes": "0",
           "madeComments": [
             {
               "userName": "",
@@ -84,8 +84,8 @@
       ],
       "made": [
         {
-          "madeSource": "",
-          "madeLikes": "1",
+          "madeSource": "butterfly_made1",
+          "madeLikes": "3",
           "madeComments": [
             {
               "userName": "",
@@ -95,7 +95,20 @@
               "commentText": ""
             }
           ]
-        }
+        },
+        {
+                  "madeSource": "butterfly_made2",
+                  "madeLikes": "5",
+                  "madeComments": [
+                    {
+                      "userName": "",
+                      "userPicture": "",
+                      "profession": "",
+                      "commentDuration": "",
+                      "commentText": ""
+                    }
+                  ]
+                }
       ]
     },
     {
@@ -133,8 +146,8 @@
       ],
       "made": [
         {
-          "madeSource": "",
-          "madeLikes": "1",
+          "madeSource": "carousel_made1",
+          "madeLikes": "15",
           "madeComments": [
             {
               "userName": "",
@@ -144,7 +157,20 @@
               "commentText": ""
             }
           ]
-        }
+        },
+        {
+                  "madeSource": "carousel_made2",
+                  "madeLikes": "17",
+                  "madeComments": [
+                    {
+                      "userName": "",
+                      "userPicture": "",
+                      "profession": "",
+                      "commentDuration": "",
+                      "commentText": ""
+                    }
+                  ]
+                }
       ]
     }
   ]
