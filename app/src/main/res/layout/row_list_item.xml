@@ -11,12 +11,12 @@
     android:paddingBottom="8dp">
 
     <ImageView
-        android:background="@color/colorPrimary"
         android:id="@+id/profileImageView"
         android:layout_width="50dp"
         android:layout_height="55dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:background="@color/colorPrimary"
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -80,13 +80,12 @@
         android:id="@+id/cardImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardElevation="2dp"
+        app:cardPreventCornerOverlap="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText"
-        app:cardElevation="4dp"
-        app:cardCornerRadius="6dp"
-        app:cardPreventCornerOverlap="true">
+        app:layout_constraintTop_toBottomOf="@+id/titleText">
 
         <ImageView
             android:id="@+id/postImageView"
@@ -94,7 +93,35 @@
             android:layout_height="230dp"
             android:layout_marginTop="16dp"
             android:scaleType="fitXY"
+            android:visibility="gone"
             app:srcCompat="@drawable/boat" />
+
+        <com.google.android.youtube.player.YouTubeThumbnailView
+            android:id="@+id/youtube_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            android:background="@color/colorPrimary"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout_over_youtube_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="#00FFFFFF"
+            android:foreground="?android:selectableItemBackground"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/btnYoutube_player"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_youtube_play_button"
+                android:scaleType="center" />
+
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 
 
@@ -162,12 +189,12 @@
         app:srcCompat="@drawable/ic_like" />
 
     <ImageView
-        android:visibility="invisible"
         android:id="@+id/shareView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardImageView"
         app:srcCompat="@drawable/ic_share" />

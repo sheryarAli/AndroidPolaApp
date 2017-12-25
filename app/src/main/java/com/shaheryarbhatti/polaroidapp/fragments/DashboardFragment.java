@@ -11,9 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
+import com.shaheryarbhatti.polaroidapp.Config;
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.adapters.GenericAdapter;
 import com.shaheryarbhatti.polaroidapp.dataclasses.DummyData;
@@ -106,6 +111,13 @@ public class DashboardFragment extends Fragment {
 
     }
 
+    private void onVideoClicked(View view, Post post) {
+
+        onButtonPressed(post);
+
+    }
+
+
     private void onPostViewClicked(View view, Post post) {
 
         onButtonPressed(post);
@@ -127,8 +139,6 @@ public class DashboardFragment extends Fragment {
     }
 
 
-
-
     private void prepareDashboardRecylcerView() {
         dashboardRecylcerView.setLayoutManager(linearLayoutManager);
 
@@ -142,8 +152,8 @@ public class DashboardFragment extends Fragment {
             }
 
             @Override
-            public void onBindData(RecyclerView.ViewHolder holder, final Post val, int position) {
-                ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
+            public void onBindData(final RecyclerView.ViewHolder holder, final Post val, int position) {
+                final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
                 itemViewHolder.profileImageView.setImageBitmap(UtilImage.getBitmap(getContext(), val.getUserPicture()));
                 itemViewHolder.professoinText.setText(val.getProfession());
                 itemViewHolder.titleText.setText("test");
@@ -154,10 +164,46 @@ public class DashboardFragment extends Fragment {
                 Log.d(TAG, "onBindData: SourceType:" + val.getSourceType());
                 Log.d(TAG, "onBindData: source: " + val.getSource());
                 if (val.getSourceType() == 1) {
+                    itemViewHolder.postImageView.setVisibility(View.VISIBLE);
                     UtilImage.loadImageWithPicasso(context, itemViewHolder.postImageView, val.getSource());
 
                 }
+                if (val.getSourceType() == 2) {
 
+                    final YouTubeThumbnailLoader.OnThumbnailLoadedListener onThumbnailLoadedListener = new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
+                        @Override
+                        public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
+
+                        }
+
+                        @Override
+                        public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+                            youTubeThumbnailView.setVisibility(View.VISIBLE);
+                            itemViewHolder.relativeLayoutOverYouTubeThumbnailView.setVisibility(View.VISIBLE);
+
+                        }
+                    };
+
+                    itemViewHolder.youTubeThumbnailView.initialize(Config.YOUTUBE_API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
+                        @Override
+                        public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
+
+                            youTubeThumbnailLoader.setVideo("-OQ0QwgHYDo");
+                            youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
+                        }
+
+                        @Override
+                        public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+                            //write something for failure
+                        }
+                    });
+                }
+                itemViewHolder.playButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onVideoClicked(v, val);
+                    }
+                });
                 itemViewHolder.postImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -188,6 +234,7 @@ public class DashboardFragment extends Fragment {
 
             }
 
+
             @Override
             public void onItemClick(View view) {
 
@@ -198,13 +245,16 @@ public class DashboardFragment extends Fragment {
 
     }
 
-
     private class ItemViewHolder extends RecyclerView.ViewHolder {
         private View layoutRoot;
         private ImageView profileImageView, postImageView, madeImageView, commentImageView, likeImageView;
         private TextView professoinText, personNameText,
                 durationText, commentText, madeText,
                 titleText, likeText;
+        protected RelativeLayout relativeLayoutOverYouTubeThumbnailView;
+        YouTubeThumbnailView youTubeThumbnailView;
+        protected ImageView playButton;
+
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -221,8 +271,11 @@ public class DashboardFragment extends Fragment {
             madeText = (TextView) layoutRoot.findViewById(R.id.madeText);
             titleText = (TextView) layoutRoot.findViewById(R.id.titleText);
             likeText = (TextView) layoutRoot.findViewById(R.id.likeText);
-
+            playButton = (ImageView) itemView.findViewById(R.id.btnYoutube_player);
+            relativeLayoutOverYouTubeThumbnailView = (RelativeLayout) itemView.findViewById(R.id.relativeLayout_over_youtube_thumbnail);
+            youTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail);
         }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -265,4 +318,6 @@ public class DashboardFragment extends Fragment {
         // TODO: Update argument type and name
         void onDashboardFragmentInteraction(Bundle args);
     }
+
+
 }

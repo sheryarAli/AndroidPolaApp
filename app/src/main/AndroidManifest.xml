@@ -3,6 +3,8 @@
     package="com.shaheryarbhatti.polaroidapp">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
 
     <application
         android:allowBackup="true"
@@ -13,6 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.SplashActicity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
             android:theme="@style/SplashTheme">
 
             <intent-filter>
@@ -21,10 +24,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ItemSelelectedActivity"></activity>
-        <activity android:name=".activities.PhotoViewStencilActivity"></activity>
+        <activity
+            android:name=".activities.ItemSelelectedActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"></activity>
+        <activity
+            android:name=".activities.PhotoViewStencilActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"></activity>
         <activity android:name=".activities.DrawingBoardActivity"></activity>
-        <activity android:name=".activities.MainActivity"></activity>
+        <activity
+            android:name=".activities.MainActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"></activity>
         <!--<activity android:name=".activities.SplashActicity" android:theme="@style/SplashTheme"/>-->
     </application>
 
