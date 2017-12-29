@@ -30,9 +30,9 @@ public class Post implements Serializable {
     private int postLikes;
 
     @SerializedName("comments")
-    private ArrayList<Comment> comments;
+    private ArrayList<Comment> comments = new ArrayList<>();
     @SerializedName("made")
-    private ArrayList<Made> made;
+    private ArrayList<Made> made = new ArrayList<>();
 
     public Post() {
     }

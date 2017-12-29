@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.fragments.DashboardFragment;
-import com.shaheryarbhatti.polaroidapp.fragments.FeaturedFragment;
-import com.shaheryarbhatti.polaroidapp.fragments.PopularFragment;
 
 /**
  * Created by shaheryarbhatti on 14/12/2017.
@@ -26,14 +24,14 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
 
-            case 0:
-                return DashboardFragment.newInstance("", "");
-            case 1:
-                return FeaturedFragment.newInstance("", "");
-            case 2:
-                return PopularFragment.newInstance("", "");
+//            case 0:
+//                return DashboardFragment.newInstance("", "");
+//            case 1:
+//                return FeaturedFragment.newInstance("", "");
+//            case 2:
+//                return PopularFragment.newInstance("", "");
         }
-        return null;
+        return DashboardFragment.newInstance(position);
     }
 
     @Override

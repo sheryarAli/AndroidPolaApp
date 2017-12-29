@@ -11,14 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubeThumbnailLoader;
-import com.google.android.youtube.player.YouTubeThumbnailView;
-import com.shaheryarbhatti.polaroidapp.Config;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.adapters.GenericAdapter;
 import com.shaheryarbhatti.polaroidapp.dataclasses.DummyData;
@@ -46,11 +42,12 @@ public class DashboardFragment extends Fragment {
     private GenericAdapter<Post> postAdapter;
     private ArrayList<Post> postList;
     private LinearLayoutManager linearLayoutManager;
+    private String youtubeThumbnailUrl = "https://img.youtube.com/vi/";
 
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private int mParam1;
+//    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -62,16 +59,16 @@ public class DashboardFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     //     * @param param1 Parameter 1.
+     //     * @param param2 Parameter 2.
      * @return A new instance of fragment DashboardFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DashboardFragment newInstance(String param1, String param2) {
+    public static DashboardFragment newInstance(int page) {
         DashboardFragment fragment = new DashboardFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_PARAM1, page);
+//        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,14 +78,25 @@ public class DashboardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam1 = getArguments().getInt(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
 
 //        iniilizing post array list
         postList = new ArrayList<>();
-        postList.addAll(new DummyData().getDashboardPosts(getContext()));
+        switch (mParam1) {
+            case 0:
+                postList.addAll(new DummyData().getDashboardPosts(getContext()));
+                break;
+            case 1:
+                postList.addAll(new DummyData().getFeaturePosts(getContext()));
+                break;
+            case 2:
+                postList.addAll(new DummyData().getPoplularPosts(getContext()));
+                break;
+        }
+
         Log.d(TAG, "onCreate: For Debugging");
     }
 
@@ -111,15 +119,11 @@ public class DashboardFragment extends Fragment {
 
     }
 
-    private void onVideoClicked(View view, Post post) {
 
-        onButtonPressed(post);
-
-    }
 
 
     private void onPostViewClicked(View view, Post post) {
-
+        Log.d(TAG, "onPostViewClicked: for debugging");
         onButtonPressed(post);
 
     }
@@ -141,6 +145,7 @@ public class DashboardFragment extends Fragment {
 
     private void prepareDashboardRecylcerView() {
         dashboardRecylcerView.setLayoutManager(linearLayoutManager);
+        dashboardRecylcerView.setHasFixedSize(true);
 
         postAdapter = new GenericAdapter<Post>(getContext(), postList) {
             @Override
@@ -156,10 +161,11 @@ public class DashboardFragment extends Fragment {
                 final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
                 itemViewHolder.profileImageView.setImageBitmap(UtilImage.getBitmap(getContext(), val.getUserPicture()));
                 itemViewHolder.professoinText.setText(val.getProfession());
-                itemViewHolder.titleText.setText("test");
+                itemViewHolder.titleText.setText(val.getTitleText());
                 itemViewHolder.personNameText.setText(val.getUserName());
-                itemViewHolder.durationText.setText(val.getPostDuration());
-                itemViewHolder.likeText.setText(val.getPostLikes() + "");
+                itemViewHolder.durationText.setText(val.getPostDuration() + " ago");
+                itemViewHolder.likeText.setText(val.getPostLikes() + " Likes");
+                itemViewHolder.madeText.setText(val.getMade().size() + " Mades");
 
                 Log.d(TAG, "onBindData: SourceType:" + val.getSourceType());
                 Log.d(TAG, "onBindData: source: " + val.getSource());
@@ -168,42 +174,13 @@ public class DashboardFragment extends Fragment {
                     UtilImage.loadImageWithPicasso(context, itemViewHolder.postImageView, val.getSource());
 
                 }
+                Log.d(TAG, "onBindData: source" + val.getSource());
                 if (val.getSourceType() == 2) {
+                    String thumbnailImageUrl = youtubeThumbnailUrl + val.getSource().split("=")[1] + "/0.jpg";
+                    UtilImage.loadThumbnailWithPicasso(context, itemViewHolder.postImageView, thumbnailImageUrl);
 
-                    final YouTubeThumbnailLoader.OnThumbnailLoadedListener onThumbnailLoadedListener = new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
-                        @Override
-                        public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
-
-                        }
-
-                        @Override
-                        public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
-                            youTubeThumbnailView.setVisibility(View.VISIBLE);
-                            itemViewHolder.relativeLayoutOverYouTubeThumbnailView.setVisibility(View.VISIBLE);
-
-                        }
-                    };
-
-                    itemViewHolder.youTubeThumbnailView.initialize(Config.YOUTUBE_API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
-                        @Override
-                        public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
-
-                            youTubeThumbnailLoader.setVideo("-OQ0QwgHYDo");
-                            youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
-                        }
-
-                        @Override
-                        public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
-                            //write something for failure
-                        }
-                    });
                 }
-                itemViewHolder.playButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onVideoClicked(v, val);
-                    }
-                });
+
                 itemViewHolder.postImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -240,40 +217,42 @@ public class DashboardFragment extends Fragment {
 
             }
         };
+//        postAdapter.setHasStableIds(true);
         dashboardRecylcerView.setAdapter(postAdapter);
 
 
     }
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
-        private View layoutRoot;
-        private ImageView profileImageView, postImageView, madeImageView, commentImageView, likeImageView;
+        private View layoutRoot, socialContainer;
+        private CircularImageView profileImageView;
+        private ImageView postImageView, madeImageView, commentImageView, likeImageView;
         private TextView professoinText, personNameText,
                 durationText, commentText, madeText,
                 titleText, likeText;
-        protected RelativeLayout relativeLayoutOverYouTubeThumbnailView;
-        YouTubeThumbnailView youTubeThumbnailView;
-        protected ImageView playButton;
 
 
         public ItemViewHolder(View itemView) {
             super(itemView);
             layoutRoot = itemView;
-            profileImageView = (ImageView) layoutRoot.findViewById(R.id.profileImageView);
+            profileImageView = (CircularImageView) layoutRoot.findViewById(R.id.profileImageView);
             postImageView = (ImageView) layoutRoot.findViewById(R.id.postImageView);
-            madeImageView = (ImageView) layoutRoot.findViewById(R.id.madeImageView);
-            commentImageView = (ImageView) layoutRoot.findViewById(R.id.commentImageView);
-            likeImageView = (ImageView) layoutRoot.findViewById(R.id.likeImageView);
             professoinText = (TextView) layoutRoot.findViewById(R.id.professoinText);
             personNameText = (TextView) layoutRoot.findViewById(R.id.personNameText);
             durationText = (TextView) layoutRoot.findViewById(R.id.durationText);
-            commentText = (TextView) layoutRoot.findViewById(R.id.commentText);
-            madeText = (TextView) layoutRoot.findViewById(R.id.madeText);
             titleText = (TextView) layoutRoot.findViewById(R.id.titleText);
-            likeText = (TextView) layoutRoot.findViewById(R.id.likeText);
-            playButton = (ImageView) itemView.findViewById(R.id.btnYoutube_player);
-            relativeLayoutOverYouTubeThumbnailView = (RelativeLayout) itemView.findViewById(R.id.relativeLayout_over_youtube_thumbnail);
-            youTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail);
+            socialContainer = layoutRoot.findViewById(R.id.socialContainer);
+            madeImageView = (ImageView) socialContainer.findViewById(R.id.madeBtn);
+            commentImageView = (ImageView) socialContainer.findViewById(R.id.commentBtn);
+            likeImageView = (ImageView) socialContainer.findViewById(R.id.likeBtn);
+            commentText = (TextView) socialContainer.findViewById(R.id.commentText);
+            madeText = (TextView) socialContainer.findViewById(R.id.madeText);
+            likeText = (TextView) socialContainer.findViewById(R.id.likeText);
+            postImageView.setVisibility(View.VISIBLE);
+            layoutRoot.findViewById(R.id.btnContainer).setVisibility(View.GONE);
+            layoutRoot.findViewById(R.id.frame_fragment).setVisibility(View.GONE);
+
+
         }
 
     }

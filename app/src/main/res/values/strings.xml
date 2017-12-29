@@ -8,8 +8,10 @@
     <string name="featured_fragment">Featured</string>
     <string name="popular_fragment">Popular</string>
     <string name="take_photo_action">Take Photo</string>
-    <string name="search_action">sSearch</string>
+    <string name="search_action">Search</string>
     <string name="save_draw">Save And Draw</string>
     <string name="draw">Let\'s Draw</string>
     <string name="upload_made">Upload Your Made</string>
+    <string name="add_photo">Add Photo From Library</string>
+    <string name="take_photo">Take A Photo</string>
 </resources>

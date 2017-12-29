@@ -1,52 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:orientation="horizontal"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginStart="@dimen/spacing_large"
+    android:layout_marginEnd="@dimen/spacing_large">
 
-
-    <ImageView
+    <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/userImageView"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="2dp"
-        android:background="@color/colorPrimary" />
+        android:layout_width="@dimen/spacing_xmlarge"
+        android:layout_height="@dimen/spacing_xmlarge"
+        android:foreground="@color/overlay_light_20"
+        app:civ_border="false"
+        android:layout_marginEnd="5dp"
+        app:srcCompat="@drawable/clark" />
 
-    <TextView
-        android:id="@+id/userText"
+    <LinearLayout
+        android:background="@drawable/comment_background"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_toEndOf="@+id/userImageView"
-        android:text="Stav"
-        android:textStyle="bold" />
+        android:paddingLeft="@dimen/spacing_xmedium"
+        android:paddingRight="@dimen/spacing_xmedium"
+        android:paddingTop="@dimen/spacing_middle"
+        android:paddingBottom="@dimen/spacing_middle">
 
-    <TextView
-        android:id="@+id/userTypeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_toEndOf="@+id/userText"
-        android:background="#A77A23"
-        android:text="TRACER"
-        android:textColor="#FFFFF1"
-        android:textStyle="bold" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/timeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_toEndOf="@+id/userTypeText"
-        android:text="15m" />
+            <TextView
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:id="@+id/userText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textColor="#636365"
+                android:text="Stav"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/commentText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/timeText"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@+id/userImageView"
-        android:text="sdasdasdasdsdasdasdasdsdasdasdasdsdasdasdasdsdasdasdasdsdasdasdasdsdasdasdasdsdasdasdasd" />
-</RelativeLayout>
+
+            <TextView
+                android:textColor="#C1C1C3"
+                android:id="@+id/timeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+
+                android:text="15m ago" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:textColor="#6C6C6E"
+            android:id="@+id/commentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="comment" />
+    </LinearLayout>
+
+
+</LinearLayout>

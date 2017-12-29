@@ -5,9 +5,9 @@
     tools:context="com.shaheryarbhatti.polaroidapp.fragments.DashboardFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <FrameLayout
+    <!--<FrameLayout
         android:id="@+id/frame_fragment"
         android:layout_width="match_parent"
-        android:layout_height="200dp"></FrameLayout>
+        android:layout_height="200dp"></FrameLayout>-->
 
 </RelativeLayout>

@@ -1,33 +1,56 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:visibility="visible"
+    app:contentPaddingBottom="@dimen/spacing_xlarge"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="4dp"
+    app:cardMaxElevation="4dp"
+    app:cardUseCompatPadding="true">
 
-    <TextView
-        android:id="@+id/sectionText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/postImageView"
-        android:layout_marginLeft="10dp"
-        android:text="Section" />
-
-
-    <View
-        android:id="@+id/border"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/sectionText"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:background="@android:color/darker_gray"
-        android:padding="1dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/sectoinsRecyclerView"
-        android:layout_below="@id/border"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <LinearLayout
 
-    </android.support.v7.widget.RecyclerView>
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginBottom="@dimen/spacing_large"
+            android:paddingLeft="@dimen/spacing_large"
+            android:paddingRight="@dimen/spacing_large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-</LinearLayout>
+            <ImageView
+                android:id="@+id/sectionImageView"
+                android:tint="#EC4381"
+                android:layout_marginEnd="@dimen/spacing_medium"
+                android:layout_width="@dimen/spacing_mlarge"
+                android:layout_height="@dimen/spacing_mlarge"
+                app:srcCompat="@drawable/ic_pencil" />
+
+            <TextView
+                android:layout_gravity="top"
+                android:textColor="#A1A1A3"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:id="@+id/sectionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="Section" />
+        </LinearLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/sectoinsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

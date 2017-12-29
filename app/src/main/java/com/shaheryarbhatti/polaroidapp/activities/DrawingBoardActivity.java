@@ -48,6 +48,7 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
     Bitmap bm, bitmapScalled, bmScalled, cs, grid;
     Canvas comboImage;
     private Toolbar toolbar;
+    private int drawableId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,53 +56,43 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_drawing_board);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ((ImageView) toolbar.findViewById(R.id.logoImageView)).setVisibility(View.GONE);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle("Draw");
+        }
         imageView = (ImageView) findViewById(R.id.drawingBoardImageView);
 
         zoomInButton = (ImageButton) findViewById(R.id.zoomInButton);
         zoomOutButton = (ImageButton) findViewById(R.id.zoomOutButton);
         lockBtn = (ImageButton) findViewById(R.id.lockBtn);
         zoomText = (TextView) findViewById(R.id.zoomText);
-        int drawableId = UtilImage.getDrawableId(this, getIntent().getStringExtra("image"));
-//        String imageSource = getI
-
-        /*locked = (ImageView) findViewById(R.id.btn_Locked);
-        unlocked = (ImageView) findViewById(R.id.btn_unLocked);*/
-
-//        home = (ImageView) findViewById(R.id.btn_Home);
-//        rainbow = (ImageView) findViewById(R.id.RainbowBottom);
 
 
-//        filePath = get.GetString("imageURI");
-//        imageURI = Uri.parse(filePath);
-//        File f = new File(filePath);
+        String imagePath = getIntent().getStringExtra("image");
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-//        BitmapFactory.decodeFile(filePath, options);
 
-        //System.IO.FileStream fs = new System.IO.FileStream(f.Path, System.IO.FileMode.Open);
-        BitmapFactory.decodeResource(getResources(), drawableId, options);
-        //fs.Close();
+        int imageSourceType = getIntent().getIntExtra("imageType", 0);
+
+        setBm(imageSourceType, options, imagePath);
 
 
         float aspectRatio = (float) options.outWidth / (float) options.outHeight;
+
         int height = Math.round(getResources().getDisplayMetrics().widthPixels / aspectRatio);
 
-
         options.inSampleSize = (int) getScale(options.outWidth, options.outHeight, getResources().getDisplayMetrics().widthPixels, height);
-
         options.inJustDecodeBounds = false;
-        Drawable d = getResources().getDrawable(drawableId);
-        bm = BitmapFactory.decodeResource(getResources(), drawableId, options);
-        bm = drawableToBitmap(d);
 
-//        bm = BitmapFactory.decodeFile(filePath, options);
 
-        bmScalled = getResizedBitmap(bm, (int) ((float) getResources().getDisplayMetrics().widthPixels), height);//Resources.DisplayMetrics.HeightPixels);
+        setBm(imageSourceType, options, imagePath);
+
+        bmScalled = getResizedBitmap(bm, getResources().getDisplayMetrics().widthPixels, height);//Resources.DisplayMetrics.HeightPixels);
 
         grid = BitmapFactory.decodeResource(getResources(), R.drawable.grid4_grey);
         bitmapScalled = Bitmap.createScaledBitmap(grid, getResources().getDisplayMetrics().widthPixels, height, true);
@@ -123,9 +114,19 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
         zoomOutButton.setOnClickListener(this);
 
         lockBtn.setOnClickListener(this);
-        /*lockBtn.setOnClickListener(this);
-        unlocked.setOnClickListener(this);*/
-//        home.setOnClickListener(this);
+
+    }
+
+    private void setBm(int imageSourceType, BitmapFactory.Options options, String imagePath) {
+        if (imageSourceType == 1) {
+            bm = BitmapFactory.decodeFile(imagePath, options);
+
+        } else {
+            Log.d(TAG, "onCreate: else code");
+            drawableId = UtilImage.getDrawableId(this, imagePath);
+            bm = BitmapFactory.decodeResource(getResources(), drawableId, options);
+        }
+
     }
 
     private void updateLockButton() {

@@ -1,6 +1,7 @@
 
 package com.shaheryarbhatti.polaroidapp.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,6 +9,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -18,9 +20,17 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import com.shaheryarbhatti.polaroidapp.R;
+import com.shaheryarbhatti.polaroidapp.utilities.UtilImage;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PhotoViewStencilActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
+    private final String TAG = "PhotoViewStencilAct";
     private ImageView imageView;
     private Bitmap bMapScaled, originalBmp;
     private SeekBar stencilSeekBar;
@@ -32,8 +42,16 @@ public class PhotoViewStencilActivity extends AppCompatActivity implements SeekB
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_view_stencil);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ((ImageView) toolbar.findViewById(R.id.logoImageView)).setVisibility(View.GONE);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle("Stencil");
+        }
+
         imageView = (ImageView) findViewById(R.id.imageView);
         letDrawBtn = (Button) findViewById(R.id.letDrawBtn);
         stencilSeekBar = (SeekBar) findViewById(R.id.stencilSeekBar);
@@ -46,8 +64,6 @@ public class PhotoViewStencilActivity extends AppCompatActivity implements SeekB
         stencilSeekBar.setOnSeekBarChangeListener(this);
 
 
-        setSupportActionBar(toolbar);
-
 // TODO: create Bitmap in java
         /*
         Xamrin code to get & generate bimtap from intent
@@ -57,15 +73,18 @@ public class PhotoViewStencilActivity extends AppCompatActivity implements SeekB
 
         ;
 
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.sample_image2);
+        String imagePath = getIntent().getStringExtra("image");
+
+        Bitmap bmp = BitmapFactory.decodeFile(imagePath);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
 
         double viewWidthToBitmapWidthRatio = (double) metrics.widthPixels / (double) bmp.getWidth();
 
         bMapScaled = Bitmap.createScaledBitmap(bmp, metrics.widthPixels, (int) (bmp.getHeight() * viewWidthToBitmapWidthRatio), true);
-//        imageView.setAdjustViewBounds(true);
+
+
+        imageView.setAdjustViewBounds(true);
         imageView.setImageBitmap(bMapScaled);
         originalBmp = bMapScaled.copy(bMapScaled.getConfig(), true);
 
@@ -76,15 +95,17 @@ public class PhotoViewStencilActivity extends AppCompatActivity implements SeekB
     @Override
     public void onClick(View v) {
         if (v == letDrawBtn) {
-            canvas = new Canvas(bMapScaled);
-            Paint paint = new Paint();
-            paint.setColorFilter(new ColorMatrixColorFilter(getColorMatrix()));
-            canvas.drawBitmap(bMapScaled, 0, 0, paint);
+            Bitmap bitmap = UtilImage.getBitmapFromImageView(imageView);
+            String imagePath = saveToInternalStorage(bitmap);
+            Intent intent = new Intent(this, DrawingBoardActivity.class);
+            intent.putExtra("imageType", 1);
+            intent.putExtra("image", imagePath);
+            startActivity(intent);
 
-            imageView.setImageBitmap(bMapScaled);
 
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -116,6 +137,7 @@ public class PhotoViewStencilActivity extends AppCompatActivity implements SeekB
     public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
+
 
     //TODO: changeOrientation
     /*
@@ -152,20 +174,29 @@ public class PhotoViewStencilActivity extends AppCompatActivity implements SeekB
 
         Xamrin code creating files
 
-        private File CreateDirectoryForPictures(string dirName)
-        {
-            File file = new File(
-                 Android.OS.Environment.GetExternalStoragePublicDirectory(
-                     Android.OS.Environment.DirectoryPictures), dirName);
-            if (!file.Exists())
-            {
-                file.Mkdirs();
-            }
 
-            return file;
-        }
 
     * */
+
+
+    private String saveToInternalStorage(Bitmap bitmapImage) {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String fileName = "stencil_" + timeStamp + ".png";
+        File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File file = new File(directory, fileName);
+
+        try {
+            FileOutputStream fos = new FileOutputStream(file.getPath());
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return directory.getAbsolutePath() + "/" + fileName;
+    }
 
     private ColorMatrix getColorMatrix() {
         return getColorMatrix(128);

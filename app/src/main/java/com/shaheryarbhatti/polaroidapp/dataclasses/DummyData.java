@@ -74,6 +74,20 @@ public class DummyData implements Serializable {
 
     }
 
+    public ArrayList<Post> getFeaturePosts(Context context) {
+        String jsonData = UtilFile.readFromfile("FeaturedDummyJsonData.txt", context);
+        DummyData dummyData = new GsonBuilder().create().fromJson(jsonData, DummyData.class);
+        return dummyData.getPosts();
+
+    }
+
+    public ArrayList<Post> getPoplularPosts(Context context) {
+        String jsonData = UtilFile.readFromfile("PopularDummyJsonData.txt", context);
+        DummyData dummyData = new GsonBuilder().create().fromJson(jsonData, DummyData.class);
+        return dummyData.getPosts();
+
+    }
+
 
 
 

@@ -4,7 +4,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="?colorPrimary"
+    android:background="@color/black"
     app:theme="@style/ThemeOverlay.AppCompat.Dark"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
@@ -15,7 +15,8 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            app:srcCompat="@drawable/logo_white"
+            android:id="@+id/logoImageView"
+            app:srcCompat="@drawable/play_logo"
             android:layout_width="150dp"
             android:layout_height="wrap_content" />
 
