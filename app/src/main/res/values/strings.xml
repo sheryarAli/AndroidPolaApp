@@ -11,7 +11,26 @@
     <string name="search_action">Search</string>
     <string name="save_draw">Save And Draw</string>
     <string name="draw">Let\'s Draw</string>
+    <string name="sign_up">Sign Up</string>
     <string name="upload_made">Upload Your Made</string>
     <string name="add_photo">Add Photo From Library</string>
     <string name="take_photo">Take A Photo</string>
+    <string name="facebook_app_id">147184545968849</string>
+    <string name="fb_login_protocol_scheme">fb147184545968849</string>
+    <string name="login_test_url">http://35.178.99.1:3000/login</string>
+    <string name="signup_test_url">http://35.178.99.1:3000/register</string>
+    <string name="file_upload_test_url">http://35.178.99.1:3000/file/upload</string>
+    <string name="file_remove_test_url">http://35.178.99.1:3000/file/remove</string>
+    <string name="logout_test_url">http://35.178.99.1:3000/logout</string>
+    <string name="user_update_test_url">http://35.178.99.1:3000/user/me</string>
+    <string name="user_profile_test_url">http://35.178.99.1:3000/user/me</string>
+    <string name="home_post_feed_test_url">http://35.178.99.1:3000/post/home</string>
+    <string name="top_post_feed_test_url">http://35.178.99.1:3000/post/top</string>
+    <string name="featured_post_feed_test_url">http://35.178.99.1:3000/post/featured</string>
+    <string name="my_post_feed_test_url">http://35.178.99.1:3000/post/my</string>
+    <string name="post_creation_test_url">http://35.178.99.1:3000/post/seed</string>
+
+
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">BRq785ftC30Z0vy4DjK2UElK7</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">Qa1P9IsOaPagLiCnKGHD1Qj3CeNg84xNfOvZSFPXNSm8NkJNJ8</string>
 </resources>

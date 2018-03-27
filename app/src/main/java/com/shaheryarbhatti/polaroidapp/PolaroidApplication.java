@@ -5,6 +5,9 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 
+import com.androidnetworking.AndroidNetworking;
+import com.twitter.sdk.android.core.Twitter;
+
 /**
  * Created by shaheryarbhatti on 20/12/2017.
  */
@@ -14,6 +17,8 @@ public class PolaroidApplication extends Application {
     public void onCreate() {
         super.onCreate();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        Twitter.initialize(this);
+        AndroidNetworking.initialize(getApplicationContext());
     }
 
     @Override

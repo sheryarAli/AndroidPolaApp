@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -25,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.fragments.DashboardFragment;
@@ -41,6 +43,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener
         , FeaturedFragment.OnFragmentInteractionListener, PopularFragment.OnFragmentInteractionListener {
 
+
     private final String TAG = "MainActivity";
     private TabLayout tabs;
     private ViewPager viewPager;
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     private final int REQUEST_IMAGE_PICK = 2;
     private String mCurrentPhotoPath;
     CharSequence takePhotoMenu[] = new CharSequence[]{"Add Photo From Library", "Take A Photo"};
+    private UtilImage utilImage;
+    boolean doubleBackToExitPressedOnce = false;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -60,8 +65,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        utilImage = UtilImage.getInstance();
         tabs = (TabLayout) findViewById(R.id.tabs);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         MainFragmentPagerAdapter adapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(1);
         tabs.setupWithViewPager(viewPager);
 
 
@@ -257,6 +261,25 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+    }
+
     private boolean checkRequestGranted(int[] grantResults) {
         return grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
@@ -273,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
                     Log.d(TAG, "onActivityResult: image capture");
                     break;
                 case REQUEST_IMAGE_PICK:
-                    mCurrentPhotoPath = UtilImage.getImagePath(MainActivity.this, data.getData());
+                    mCurrentPhotoPath = utilImage.getImagePath(MainActivity.this, data.getData());
                     break;
 
             }

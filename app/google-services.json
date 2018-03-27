@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "445706303952",
+    "firebase_url": "https://polaroid-play-trace.firebaseio.com",
+    "project_id": "polaroid-play-trace",
+    "storage_bucket": "polaroid-play-trace.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445706303952:android:bb430a355f818504",
+        "android_client_info": {
+          "package_name": "com.shaheryarbhatti.polaroidapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "445706303952-cfku88m1or4a3v56s353mrv2653srd3h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBY7rf7QGmykDpr5M2b_4L1zAFeFUcPD5I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
