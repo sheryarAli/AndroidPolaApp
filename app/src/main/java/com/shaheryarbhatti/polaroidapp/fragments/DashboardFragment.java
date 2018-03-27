@@ -1,6 +1,7 @@
 package com.shaheryarbhatti.polaroidapp.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mikhaellopez.circularimageview.CircularImageView;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.StringRequestListener;
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.adapters.GenericAdapter;
 import com.shaheryarbhatti.polaroidapp.dataclasses.DummyData;
@@ -22,6 +25,7 @@ import com.shaheryarbhatti.polaroidapp.dataclasses.Post;
 import com.shaheryarbhatti.polaroidapp.utilities.UtilImage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -43,6 +47,12 @@ public class DashboardFragment extends Fragment {
     private ArrayList<Post> postList;
     private LinearLayoutManager linearLayoutManager;
     private String youtubeThumbnailUrl = "https://img.youtube.com/vi/";
+    private UtilImage utilImage;
+    private HashMap<String, Bitmap> imageMap = new HashMap<>();
+    private ArrayList<Bitmap> profileBitmaps = new ArrayList<>();
+    private final int HOME_FEED = 0;
+    private final int FEATURED_FEED = 1;
+    private final int TOP_FEED = 2;
 
 
     // TODO: Rename and change types of parameters
@@ -58,9 +68,10 @@ public class DashboardFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
+     * <p>
+     * //     * @param param1 Parameter 1.
+     * //     * @param param2 Parameter 2.
      *
-     //     * @param param1 Parameter 1.
-     //     * @param param2 Parameter 2.
      * @return A new instance of fragment DashboardFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -77,6 +88,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        utilImage = UtilImage.getInstance();
         if (getArguments() != null) {
             mParam1 = getArguments().getInt(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
@@ -97,7 +109,100 @@ public class DashboardFragment extends Fragment {
                 break;
         }
 
+        loadBitmapImages();
         Log.d(TAG, "onCreate: For Debugging");
+    }
+
+    private void populatePostList(int i) {
+        String postFeedUrl = "";
+        switch (i) {
+
+            case HOME_FEED:
+                postFeedUrl = getResources().getString(R.string.home_post_feed_test_url);
+                break;
+
+            case FEATURED_FEED:
+                postFeedUrl = getResources().getString(R.string.featured_post_feed_test_url);
+                break;
+            case TOP_FEED:
+                postFeedUrl = getResources().getString(R.string.top_post_feed_test_url);
+                break;
+
+
+        }
+        String authorization = "";
+        AndroidNetworking.post(postFeedUrl)
+                .addHeaders("Authorization", authorization)
+
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, "onResponse: " + response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Log.d(TAG, "onError: " + anError.getErrorBody());
+                    }
+                });
+    }
+
+    private void handleSubscribe(String userId) {
+        String subscribeUrl = "http://35.178.99.1:3000/post/" + userId + "/subscribe";
+        String authorization = "";
+        AndroidNetworking.post(subscribeUrl)
+                .addHeaders("Authorization", authorization)
+
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, "onResponse: " + response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Log.d(TAG, "onError: " + anError.getErrorBody());
+                    }
+                });
+
+    }
+
+    private void handleLike(String userId) {
+        String subscribeUrl = "http://35.178.99.1:3000/post/" + userId + "/like";
+        String authorization = "";
+        AndroidNetworking.post(subscribeUrl)
+                .addHeaders("Authorization", authorization)
+
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, "onResponse: " + response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Log.d(TAG, "onError: " + anError.getErrorBody());
+                    }
+                });
+
+    }
+
+    private void loadBitmapImages() {
+        for (Post post : postList) {
+//            if (post.getSourceType() == 1) {
+            imageMap.put(post.getSource(), utilImage.loadScaledDownBitmapForDisplay(getContext(),
+                    utilImage.getDrawableId(getContext(), post.getSource()), 200, 200));
+//            }
+
+//            if (post.getSourceType() == 2){
+//            imageMap.put(post.getSource(), utilImage.createVideoThumbNail(post.getSource()));
+//            }
+            profileBitmaps.add(utilImage.loadScaledDownBitmapForDisplay(getContext(),
+                    utilImage.getDrawableId(getContext(), post.getUserPicture()), 50, 50));
+        }
     }
 
 
@@ -118,8 +223,6 @@ public class DashboardFragment extends Fragment {
         prepareDashboardRecylcerView();
 
     }
-
-
 
 
     private void onPostViewClicked(View view, Post post) {
@@ -159,27 +262,33 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onBindData(final RecyclerView.ViewHolder holder, final Post val, int position) {
                 final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.profileImageView.setImageBitmap(UtilImage.getBitmap(getContext(), val.getUserPicture()));
+
+                itemViewHolder.profileImageView.setImageBitmap(profileBitmaps.get(position));
                 itemViewHolder.professoinText.setText(val.getProfession());
                 itemViewHolder.titleText.setText(val.getTitleText());
                 itemViewHolder.personNameText.setText(val.getUserName());
                 itemViewHolder.durationText.setText(val.getPostDuration() + " ago");
                 itemViewHolder.likeText.setText(val.getPostLikes() + " Likes");
                 itemViewHolder.madeText.setText(val.getMade().size() + " Mades");
+                itemViewHolder.commentText.setText(val.getComments().size() + " Comments");
 
-                Log.d(TAG, "onBindData: SourceType:" + val.getSourceType());
-                Log.d(TAG, "onBindData: source: " + val.getSource());
-                if (val.getSourceType() == 1) {
-                    itemViewHolder.postImageView.setVisibility(View.VISIBLE);
-                    UtilImage.loadImageWithPicasso(context, itemViewHolder.postImageView, val.getSource());
+                itemViewHolder.postImageView.setVisibility(View.VISIBLE);
+                itemViewHolder.postImageView.setImageBitmap(imageMap.get(val.getSource()));
+//                if (val.getSourceType() == 1) {
 
-                }
-                Log.d(TAG, "onBindData: source" + val.getSource());
-                if (val.getSourceType() == 2) {
+//                    itemViewHolder.postImageView.setVisibility(View.VISIBLE);
+                    /*UtilImage.setPicFromDrawableResuource(context, itemViewHolder.postImageView,
+                            UtilImage.getDrawableId(context, val.getSource()));*/
+//                    itemViewHolder.postImageView.setImageBitmap(imageMap.get(val.getSource()));
+//                    utilImage.loadImageWithPicasso(context, itemViewHolder.postImageView, val.getSource());
+
+//                }
+                /*if (val.getSourceType() == 2) {
                     String thumbnailImageUrl = youtubeThumbnailUrl + val.getSource().split("=")[1] + "/0.jpg";
-                    UtilImage.loadThumbnailWithPicasso(context, itemViewHolder.postImageView, thumbnailImageUrl);
+                    Log.d(TAG, "onBindData: thumbnailImageUrl: " + thumbnailImageUrl);
+                    utilImage.loadThumbnailWithPicasso(context, itemViewHolder.postImageView, thumbnailImageUrl);
 
-                }
+                }*/
 
                 itemViewHolder.postImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -225,7 +334,7 @@ public class DashboardFragment extends Fragment {
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
         private View layoutRoot, socialContainer;
-        private CircularImageView profileImageView;
+        private com.github.siyamed.shapeimageview.CircularImageView profileImageView;
         private ImageView postImageView, madeImageView, commentImageView, likeImageView;
         private TextView professoinText, personNameText,
                 durationText, commentText, madeText,
@@ -235,7 +344,7 @@ public class DashboardFragment extends Fragment {
         public ItemViewHolder(View itemView) {
             super(itemView);
             layoutRoot = itemView;
-            profileImageView = (CircularImageView) layoutRoot.findViewById(R.id.profileImageView);
+            profileImageView = (com.github.siyamed.shapeimageview.CircularImageView) layoutRoot.findViewById(R.id.profileImageView);
             postImageView = (ImageView) layoutRoot.findViewById(R.id.postImageView);
             professoinText = (TextView) layoutRoot.findViewById(R.id.professoinText);
             personNameText = (TextView) layoutRoot.findViewById(R.id.personNameText);
