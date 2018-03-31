@@ -1,5 +1,6 @@
 package com.shaheryarbhatti.polaroidapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
@@ -10,7 +11,12 @@ import android.widget.Button;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.shaheryarbhatti.polaroidapp.R;
+import com.shaheryarbhatti.polaroidapp.preferences.LocalStoragePreferences;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "LoginActivity";
@@ -19,16 +25,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;*/
     private AppCompatEditText emailEdt, passwordEdt;
-    private Button loginButton, fbSigninButton, twitterSigninButton, logoutButton;
+    private Button loginButton, fbSigninButton, twitterSigninButton, logoutButton, signupBtn;
     //    private CallbackManager callbackManager;
     //   FB REQUEST_CODE: 64206
 //    private TwitterAuthClient mTwitterAuthClient = new TwitterAuthClient();
     private boolean isLoggedIn;
+    private LocalStoragePreferences preferences;
 
 
     @Override
     protected void onStart() {
         super.onStart();
+        preferences = new LocalStoragePreferences(this);
 /*        currentUser = mAuth.getCurrentUser();
         if (currentUser!=null){
         Log.d(TAG, "onStart: login: " + (currentUser != null));
@@ -72,13 +80,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 });*/
         setContentView(R.layout.activity_login);
-        emailEdt = (AppCompatEditText) findViewById(R.id.emailEdt);
-        passwordEdt = (AppCompatEditText) findViewById(R.id.passwordEdt);
-        fbSigninButton = (Button) findViewById(R.id.fb_sign_in_button);
-        twitterSigninButton = (Button) findViewById(R.id.twitter_sign_in_button);
-        loginButton = (Button) findViewById(R.id.email_sign_in_button);
+        emailEdt = findViewById(R.id.emailEdt);
+        passwordEdt = findViewById(R.id.passwordEdt);
+        fbSigninButton = findViewById(R.id.fb_sign_in_button);
+        twitterSigninButton = findViewById(R.id.twitter_sign_in_button);
+        loginButton = findViewById(R.id.email_sign_in_button);
+        signupBtn = findViewById(R.id.signupBtn);
 //        logoutButton = (Button) findViewById(R.id.logout_button);
         loginButton.setOnClickListener(this);
+        signupBtn.setOnClickListener(this);
 //        fbSigninButton.setOnClickListener(this);
 //        twitterSigninButton.setOnClickListener(this);
 //        logoutButton.setOnClickListener(this);
@@ -120,8 +130,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v == loginButton) {
-            handleEmailAndPasswordLogin(emailEdt.getText().toString(), passwordEdt.getText().toString(), "");
+            String pushToken = FirebaseInstanceId.getInstance().getToken();
+            handleEmailAndPasswordLogin(emailEdt.getText().toString(), passwordEdt.getText().toString(), pushToken);
             /*handleEmailAndPasswordLogin(emailEdt.getText().toString(), passwordEdt.getText().toString());*/
+        }
+        if (v == signupBtn) {
+            startActivity(new Intent(LoginActivity.this, SignupActivity.class));
         }
         /*if (v == fbSigninButton) {
             fbSignIn();
@@ -141,7 +155,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void handleEmailAndPasswordLogin(String email, String password, String pushToken) {
         String loginUrl = getResources().getString(R.string.login_test_url);
-
+        Log.d(TAG, "handleEmailAndPasswordLogin: for debugging");
         AndroidNetworking.post(loginUrl)
                 .addHeaders("Content-Type", "application/json")
                 .addBodyParameter("email", email)
@@ -151,7 +165,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d(TAG, "onResponse: " + response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean isSuccess = jsonObject.getBoolean("success");
+
+                            if (isSuccess) {
+                                JSONObject dataObj = jsonObject.getJSONObject("data");
+                                JSONObject userObj = dataObj.getJSONObject("user");
+                                preferences.setIsLoggedIn(true);
+                                preferences.setUserId(userObj.getString("id"));
+                                preferences.setToken(dataObj.getString("token"));
+                                preferences.setName(userObj.getString("name"));
+                                preferences.setEmail(userObj.getString("email"));
+                                preferences.setDOB(userObj.getString("dob"));
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
                     }
 
                     @Override

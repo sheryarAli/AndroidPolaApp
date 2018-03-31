@@ -22,7 +22,11 @@ import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.adapters.GenericAdapter;
 import com.shaheryarbhatti.polaroidapp.dataclasses.DummyData;
 import com.shaheryarbhatti.polaroidapp.dataclasses.Post;
+import com.shaheryarbhatti.polaroidapp.utilities.EndlessRecyclerViewScrollListener;
 import com.shaheryarbhatti.polaroidapp.utilities.UtilImage;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +57,7 @@ public class DashboardFragment extends Fragment {
     private final int HOME_FEED = 0;
     private final int FEATURED_FEED = 1;
     private final int TOP_FEED = 2;
+    private int limit = 5, skip = 0, count = 0;
 
 
     // TODO: Rename and change types of parameters
@@ -130,7 +135,7 @@ public class DashboardFragment extends Fragment {
 
 
         }
-        String authorization = "";
+        String authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhYWU1Y2YxMDJiODI5MjZmODA2NjZlMSIsInByb2ZpbGVfcGljIjoic29tZV91cmwiLCJmaXJzdF9uYW1lIjoiTXVoYW1tYWQiLCJsYXN0X25hbWUiOiJQYXRlbCIsIm1pZGRsZV9uYW1lIjoiQWJkdWxNb2l6IiwibW9iaWxlX251bWJlciI6Iis5MjMzMjM0Nzg4MzIiLCJlbWFpbCI6ImFiZHVsbW9pemVuZysxMkBnbWFpbC5jb20iLCJkb2IiOiIxOTkyLTEwLTE0VDE5OjAwOjAwLjAwMFoiLCJ0eXBlIjoiYWRtaW4iLCJpYXQiOjE1MjEzODg1OTYsImV4cCI6MTU4MTM4ODUzNn0.l6XQcSGN7QvxOnnzkTNQByCAmIoHxtDj6FKxRX-2fUw";
         AndroidNetworking.post(postFeedUrl)
                 .addHeaders("Authorization", authorization)
 
@@ -139,6 +144,13 @@ public class DashboardFragment extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         Log.d(TAG, "onResponse: " + response);
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -146,6 +158,10 @@ public class DashboardFragment extends Fragment {
                         Log.d(TAG, "onError: " + anError.getErrorBody());
                     }
                 });
+    }
+
+    private void loadMore() {
+        populatePostList(mParam1);
     }
 
     private void handleSubscribe(String userId) {
@@ -325,7 +341,16 @@ public class DashboardFragment extends Fragment {
             public void onItemClick(View view) {
 
             }
+
+
         };
+        dashboardRecylcerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                loadMore();
+            }
+        });
+
 //        postAdapter.setHasStableIds(true);
         dashboardRecylcerView.setAdapter(postAdapter);
 
@@ -344,19 +369,19 @@ public class DashboardFragment extends Fragment {
         public ItemViewHolder(View itemView) {
             super(itemView);
             layoutRoot = itemView;
-            profileImageView = (com.github.siyamed.shapeimageview.CircularImageView) layoutRoot.findViewById(R.id.profileImageView);
-            postImageView = (ImageView) layoutRoot.findViewById(R.id.postImageView);
-            professoinText = (TextView) layoutRoot.findViewById(R.id.professoinText);
-            personNameText = (TextView) layoutRoot.findViewById(R.id.personNameText);
-            durationText = (TextView) layoutRoot.findViewById(R.id.durationText);
-            titleText = (TextView) layoutRoot.findViewById(R.id.titleText);
+            profileImageView = layoutRoot.findViewById(R.id.profileImageView);
+            postImageView = layoutRoot.findViewById(R.id.postImageView);
+            professoinText = layoutRoot.findViewById(R.id.professoinText);
+            personNameText = layoutRoot.findViewById(R.id.personNameText);
+            durationText = layoutRoot.findViewById(R.id.durationText);
+            titleText = layoutRoot.findViewById(R.id.titleText);
             socialContainer = layoutRoot.findViewById(R.id.socialContainer);
-            madeImageView = (ImageView) socialContainer.findViewById(R.id.madeBtn);
-            commentImageView = (ImageView) socialContainer.findViewById(R.id.commentBtn);
-            likeImageView = (ImageView) socialContainer.findViewById(R.id.likeBtn);
-            commentText = (TextView) socialContainer.findViewById(R.id.commentText);
-            madeText = (TextView) socialContainer.findViewById(R.id.madeText);
-            likeText = (TextView) socialContainer.findViewById(R.id.likeText);
+            madeImageView = socialContainer.findViewById(R.id.madeBtn);
+            commentImageView = socialContainer.findViewById(R.id.commentBtn);
+            likeImageView = socialContainer.findViewById(R.id.likeBtn);
+            commentText = socialContainer.findViewById(R.id.commentText);
+            madeText = socialContainer.findViewById(R.id.madeText);
+            likeText = socialContainer.findViewById(R.id.likeText);
             postImageView.setVisibility(View.VISIBLE);
             layoutRoot.findViewById(R.id.btnContainer).setVisibility(View.GONE);
             layoutRoot.findViewById(R.id.frame_fragment).setVisibility(View.GONE);

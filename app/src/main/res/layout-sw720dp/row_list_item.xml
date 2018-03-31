@@ -29,14 +29,10 @@
 
             <com.github.siyamed.shapeimageview.CircularImageView
                 android:id="@+id/profileImageView"
-                android:layout_width="@dimen/spacing_xxlarge"
-                android:layout_height="@dimen/spacing_xxlarge"
+                android:layout_width="@dimen/spacing_xxxlarge"
+                android:layout_height="@dimen/spacing_xxxlarge"
                 android:foreground="@color/overlay_light_20"
-                android:src="@drawable/lenni_canham_profile"
-
-                />
-
-            <!--app:civ_border="false"-->
+                android:src="@drawable/megan" />
 
             <View
                 android:layout_width="@dimen/spacing_large"
@@ -54,7 +50,8 @@
                     android:gravity="center_vertical"
                     android:text="Emma Richmond"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="@color/grey_90" />
+                    android:textColor="@color/grey_90"
+                    android:textSize="@dimen/font_mxlarge" />
 
                 <TextView
                     android:id="@+id/professoinText"
@@ -65,6 +62,7 @@
                     android:background="#71A332"
                     android:paddingStart="@dimen/spacing_small"
                     android:paddingEnd="@dimen/spacing_small"
+                    android:textSize="@dimen/font_smlarge"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:textColor="@android:color/white"
                     android:textStyle="bold" />
@@ -79,8 +77,9 @@
                 android:id="@+id/durationText"
                 android:layout_gravity="top"
                 android:text="3h ago"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textSize="@dimen/font_large"
                 android:textColor="@color/black"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -92,27 +91,33 @@
             android:layout_margin="@dimen/spacing_large"
             android:lineSpacingExtra="4dp"
             android:text="Title Text"
+            android:textSize="@dimen/font_mlarge"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-
             android:textColor="@color/grey_40" />
 
         <ImageView
             android:id="@+id/postImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_large"
+            android:layout_marginRight="@dimen/spacing_large"
             android:background="@color/grey_500"
             android:paddingBottom="0.5dp"
             android:paddingTop="0.5dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:visibility="gone"
-            app:srcCompat="@drawable/farris" />
+            app:srcCompat="@drawable/boat" />
 
         <FrameLayout
             android:id="@+id/frame_fragment"
             android:layout_width="match_parent"
-            android:layout_height="201dp"
-            android:visibility="visible" />
+            android:layout_height="441dp"
+            android:layout_marginLeft="@dimen/spacing_large"
+            android:layout_marginRight="@dimen/spacing_large">
+
+
+        </FrameLayout>
 
         <include
             android:id="@+id/socialContainer"
@@ -121,38 +126,45 @@
         <LinearLayout
             android:id="@+id/btnContainer"
             android:paddingBottom="@dimen/spacing_xlarge"
-            android:paddingStart="@dimen/spacing_large"
-            android:paddingEnd="@dimen/spacing_large"
+            android:paddingStart="@dimen/spacing_xlarge"
+            android:paddingEnd="@dimen/spacing_xlarge"
+            android:paddingTop="@dimen/spacing_xlarge"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <Button
+
                 android:textColor="@android:color/white"
                 android:background="@drawable/button_effect_2"
-                android:paddingStart="@dimen/spacing_large"
-                android:paddingEnd="@dimen/spacing_large"
+                android:textSize="@dimen/font_large"
+                android:paddingStart="@dimen/spacing_mxlarge"
+                android:paddingEnd="@dimen/spacing_mxlarge"
+                android:paddingTop="@dimen/spacing_mlarge"
+                android:paddingBottom="@dimen/spacing_mlarge"
                 android:text="@string/draw"
                 android:id="@+id/drawBtn"
-                android:layout_width="140dp"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content" />
 
             <View
-                android:layout_weight="1"
-                android:layout_width="0dp"
+
+                android:layout_width="@dimen/spacing_xxlarge"
                 android:layout_height="0dp" />
 
             <Button
-
                 android:enabled="false"
+                android:textSize="@dimen/font_large"
                 android:textColor="@android:color/white"
                 android:background="@drawable/button_effect_2"
-                android:paddingStart="@dimen/spacing_large"
-                android:paddingEnd="@dimen/spacing_large"
+                android:paddingStart="@dimen/spacing_mxlarge"
+                android:paddingEnd="@dimen/spacing_mxlarge"
+                android:paddingTop="@dimen/spacing_mlarge"
+                android:paddingBottom="@dimen/spacing_mlarge"
                 android:id="@+id/sendEmailBtn"
                 android:text="Send To Email"
-                android:layout_width="140dp"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content" />
 
 

@@ -18,7 +18,22 @@ public class SplashActicity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(SplashActicity.this, MainActivity.class));
+        //Todo to generate Hash key for Facebook Integration
+        /*try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.shaheryarbhatti.polaroidapp",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }*/
+        startActivity(new Intent(SplashActicity.this, PostCreationActivity.class));
         finish();
     }
 }

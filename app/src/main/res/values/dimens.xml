@@ -23,4 +23,19 @@
     <dimen name="spacing_xxxlarge">55dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
 
+    <dimen name="font_xsmall">2sp</dimen>
+    <dimen name="font_small">3sp</dimen>
+    <dimen name="font_medium">5sp</dimen>
+    <dimen name="font_xmedium">7sp</dimen>
+    <dimen name="font_middle">10sp</dimen>
+    <dimen name="font_large">15sp</dimen>
+    <dimen name="font_smlarge">18sp</dimen>
+    <dimen name="font_mlarge">20sp</dimen>
+    <dimen name="font_mxlarge">25sp</dimen>
+    <dimen name="font_xlarge">35sp</dimen>
+    <dimen name="font_xmlarge">40sp</dimen>
+    <dimen name="font_xxlarge">50sp</dimen>
+    <dimen name="font_xxxlarge">55sp</dimen>
+
+
 </resources>

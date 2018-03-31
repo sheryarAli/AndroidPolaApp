@@ -21,8 +21,23 @@
         <item name="mrl_rippleAlpha">0.2</item>
     </style>
 
+    <style name="FacebookLoginButton">
+
+        <item name="android:background">@drawable/btn_rounded_accent</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
     <style name="RippleStyleBlack" parent="RippleStyleWhite">
         <item name="mrl_rippleColor">#8096989A</item>
+    </style>
+
+    <style name="tabTextStyle" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="tabTextStyle.tablet" parent="tabTextStyle">
+        <item name="android:textSize">@dimen/font_mlarge</item>
     </style>
 
 

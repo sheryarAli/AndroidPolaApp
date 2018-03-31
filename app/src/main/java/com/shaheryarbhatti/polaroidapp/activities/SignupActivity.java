@@ -1,24 +1,33 @@
 package com.shaheryarbhatti.polaroidapp.activities;
 
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.shaheryarbhatti.polaroidapp.R;
+import com.shaheryarbhatti.polaroidapp.preferences.LocalStoragePreferences;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import static com.shaheryarbhatti.polaroidapp.Manifest.permission.CAMERA;
 import static com.shaheryarbhatti.polaroidapp.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -27,36 +36,58 @@ import static com.shaheryarbhatti.polaroidapp.Manifest.permission.WRITE_EXTERNAL
 //@RuntimePermissions
 public class SignupActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "LoginActivity";
-    private AppCompatEditText fnameEdt, mnameEdt,
+    private AppCompatEditText nameEdt, mnameEdt,
             lnameEdt, emailEdt, passwordEdt, mnumberEdt, dobEdt, genderEdt;
+    private RadioGroup genderRg;
     private ImageView takePhotoImageView;
+    public SimpleDateFormat DateFormater = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
     private Button signupBtn;
     String[] perms = {CAMERA, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE};
     final int PERMS_REQUEST_CODE = 200;
     static final int OPEN_MEDIA_PICKER = 1;
+    private LocalStoragePreferences preferences;
 
+    public void pickDate(Context context, final EditText editText) {
+
+        Calendar newCalender = Calendar.getInstance();
+        DatePickerDialog mDatePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                Date curDate = newDate.getTime();
+                editText.setText(DateFormater.format(curDate));
+
+            }
+        }, newCalender.get(Calendar.YEAR), newCalender.get(Calendar.MONTH), newCalender.get(Calendar.DAY_OF_MONTH));
+        mDatePickerDialog.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        fnameEdt = (AppCompatEditText) findViewById(R.id.fnameEdt);
-        mnameEdt = (AppCompatEditText) findViewById(R.id.mnameEdt);
-        lnameEdt = (AppCompatEditText) findViewById(R.id.lnameEdt);
-        mnumberEdt = (AppCompatEditText) findViewById(R.id.mnumberEdt);
-        dobEdt = (AppCompatEditText) findViewById(R.id.dobEdt);
-        genderEdt = (AppCompatEditText) findViewById(R.id.genderEdt);
-        emailEdt = (AppCompatEditText) findViewById(R.id.emailEdt);
-        passwordEdt = (AppCompatEditText) findViewById(R.id.passwordEdt);
-        takePhotoImageView = (ImageView) findViewById(R.id.takePhotoImageView);
-        signupBtn = (Button) findViewById(R.id.signupBtn);
+        nameEdt = findViewById(R.id.nameEdt);
+        genderRg = findViewById(R.id.genderRg);
+//        mnameEdt =  findViewById(R.id.mnameEdt);
+//        lnameEdt =  findViewById(R.id.lnameEdt);
+//        mnumberEdt =  findViewById(R.id.mnumberEdt);
+        dobEdt = findViewById(R.id.dobEdt);
+//        genderEdt =  findViewById(R.id.genderEdt);
+        emailEdt = findViewById(R.id.emailEdt);
+        passwordEdt = findViewById(R.id.passwordEdt);
+//        takePhotoImageView =  findViewById(R.id.takePhotoImageView);
+        signupBtn = findViewById(R.id.signupBtn);
 
-        takePhotoImageView.setOnClickListener(this);
+        preferences = new LocalStoragePreferences(this);
+
+        dobEdt.setOnClickListener(this);
+
         signupBtn.setOnClickListener(this);
-        if (Build.VERSION.SDK_INT >= 23 && !checkPermission()) {
+       /* if (Build.VERSION.SDK_INT >= 23 && !checkPermission()) {
             Log.d(TAG, "onCreate: ask permissions");
             requestPermissions(perms, PERMS_REQUEST_CODE);
-        }
+        }*/
 
     }
 
@@ -80,10 +111,19 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if (v == signupBtn) {
+            String pushToken = FirebaseInstanceId.getInstance().getToken();
+            String gender = "female";
+            if (genderRg.getCheckedRadioButtonId() == R.id.maleRadio) {
+                gender = "male";
+            }
 
+            handleSignUp(nameEdt.getText().toString(), emailEdt.getText().toString(),
+                    passwordEdt.getText().toString(), dobEdt.getText().toString(), gender, pushToken);
         }
-        if (v == takePhotoImageView) {
-            showCamera();
+        if (v == dobEdt) {
+            pickDate(this, dobEdt);
+        }
+
 //            SignupActivityPermissionsDispatcher.showCameraWithPermissionCheck(SignupActivity.this);
             /*Permissions.check(this, new String[]{*//*Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE, *//*Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     "Camera and storage permissions are required", new Permissions.Options()
@@ -122,7 +162,6 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                     .check();*/
 
 
-        }
     }
 
     private void handleSignUp(String name, String email, String password, String dob, String gender, String pushToken) {
@@ -141,6 +180,26 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onResponse(String response) {
                         Log.d(TAG, "onResponse: " + response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean isSuccess = jsonObject.getBoolean("success");
+                            Log.d(TAG, "onResponse: isSuccess: " + isSuccess);
+                            if (isSuccess) {
+                                JSONObject dataObj = jsonObject.getJSONObject("data");
+                                JSONObject userObj = dataObj.getJSONObject("user");
+                                preferences.setIsLoggedIn(true);
+                                preferences.setUserId(userObj.getString("id"));
+                                preferences.setToken(dataObj.getString("token"));
+                                preferences.setName(userObj.getString("name"));
+                                preferences.setEmail(userObj.getString("email"));
+                                preferences.setDOB(userObj.getString("dob"));
+                                startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
                     @Override
@@ -151,15 +210,15 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private boolean checkPermission() {
+   /* private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
         int result2 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
 
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED && result2 == PackageManager.PERMISSION_GRANTED;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
@@ -179,21 +238,21 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                     }
 
                 }
-        }
+        }*/
 //        SignupActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
 
-    }
+//    }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
-        /*if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+        *//*if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             // Get a list of picked images
 //            List<Image> images = ImagePicker.getImages(data);
             // or get a single image only
             Image image = ImagePicker.getFirstImageOrNull(data);
             Log.d(TAG, "onActivityResult: image path:" + image.getPath());
             File file = new File(image.getPath());
-        }*/
+        }*//*
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == OPEN_MEDIA_PICKER) {
@@ -205,7 +264,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
         }
-    }
+    }*/
 
     /*private Map<String, String> getBodyParams(){
         Map<String, String> params =new HashMap<>();

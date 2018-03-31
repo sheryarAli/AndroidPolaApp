@@ -55,41 +55,14 @@
                 android:textColorHint="@color/grey_40">
 
                 <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/fnameEdt"
+                    android:id="@+id/nameEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="First Name" />
+                    android:hint="Name" />
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_large"
-                android:textColorHint="@color/grey_40">
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/mnameEdt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Middle Name"
-                    android:inputType="textVisiblePassword" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_large"
-                android:textColorHint="@color/grey_40">
-
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/lnameEdt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Last Name" />
-
-            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -106,19 +79,7 @@
             </android.support.design.widget.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_large"
-                android:textColorHint="@color/grey_40">
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/mnumberEdt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Mobile Number" />
-
-            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -130,23 +91,39 @@
                     android:id="@+id/dobEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:inputType="date"
                     android:hint="Date Of Birth" />
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <RadioGroup
+                android:layout_marginTop="@dimen/spacing_smlarge"
+                android:id="@+id/genderRg"
+                android:orientation="horizontal"
                 android:layout_marginStart="@dimen/spacing_large"
-                android:textColorHint="@color/grey_40">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/genderEdt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Gender" />
 
-            </android.support.design.widget.TextInputLayout>
+                <RadioButton
+                    android:id="@+id/maleRadio"
+                    android:textStyle="bold"
+                    android:textColor="@color/grey_40"
+                    android:text="Male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <RadioButton
+                    android:id="@+id/femaleRadio"
+                    android:textStyle="bold"
+                    android:textColor="@color/grey_40"
+                    android:text="Female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </RadioGroup>
+
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -160,32 +137,9 @@
                     android:layout_height="wrap_content"
                     android:hint="Password"
                     android:inputType="textVisiblePassword" />
-
             </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
 
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_large"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Profile Picture"
-                    android:textColor="#A2A1A2"
-                    android:textSize="@dimen/font_mlarge" />
-
-                <ImageView
-                    android:id="@+id/takePhotoImageView"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginStart="@dimen/spacing_large"
-                    android:tint="#E5E4E5"
-                    app:srcCompat="@drawable/ic_camera2" />
-            </LinearLayout>
 
         </LinearLayout>
 

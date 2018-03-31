@@ -66,9 +66,9 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         utilImage = UtilImage.getInstance();
-        tabs = (TabLayout) findViewById(R.id.tabs);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        tabs = findViewById(R.id.tabs);
+        toolbar = findViewById(R.id.toolbar);
+        viewPager = findViewById(R.id.viewpager);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         MainFragmentPagerAdapter adapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);

@@ -21,9 +21,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-
-        />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <Button
 
@@ -34,11 +32,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/button_effect_2"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:textSize="@dimen/font_large"
+        android:paddingStart="@dimen/spacing_mxlarge"
+        android:paddingEnd="@dimen/spacing_mxlarge"
+        android:paddingTop="@dimen/spacing_mlarge"
+        android:paddingBottom="@dimen/spacing_mlarge"
         android:text="@string/draw"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -46,14 +46,11 @@
     <android.support.v7.widget.AppCompatSeekBar
 
         android:id="@+id/stencilSeekBar"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_width="400dp"
+        android:layout_height="@dimen/spacing_xxlarge"
         android:layout_marginBottom="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-
-        android:progressBackgroundTint="@color/colorPrimary"
-        android:progressTint="@color/colorPrimary"
         android:thumb="@drawable/seek_thumb_primary"
         app:layout_constraintBottom_toTopOf="@+id/letDrawBtn"
         app:layout_constraintEnd_toEndOf="parent"

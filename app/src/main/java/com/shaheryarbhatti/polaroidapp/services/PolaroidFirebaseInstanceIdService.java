@@ -21,5 +21,5 @@ public class PolaroidFirebaseInstanceIdService extends FirebaseInstanceIdService
 //        sendRegistrationToServer(refreshedToken);
     }
 
-//    todo: save token in sharedPreference
+
 }

@@ -18,9 +18,9 @@
         <ImageView
             android:background="?android:attr/selectableItemBackground"
             android:id="@+id/likeBtn"
-            android:layout_width="@dimen/spacing_mlarge"
-            android:layout_height="@dimen/spacing_mlarge"
-            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_width="@dimen/spacing_xlarge"
+            android:layout_height="@dimen/spacing_xlarge"
+            android:layout_marginEnd="@dimen/spacing_middle"
             android:tint="@color/light_green_300"
             app:srcCompat="@drawable/ic_thumb_up" />
 
@@ -30,16 +30,17 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:text="12 likes"
+            android:textSize="@dimen/font_mlarge"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:textColor="@color/grey_40" />
 
         <ImageView
             android:background="?android:attr/selectableItemBackground"
             android:id="@+id/commentBtn"
-            android:layout_width="@dimen/spacing_mlarge"
-            android:layout_height="@dimen/spacing_mlarge"
-            android:layout_marginEnd="@dimen/spacing_small"
-            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_width="@dimen/spacing_xlarge"
+            android:layout_height="@dimen/spacing_xlarge"
+            android:layout_marginEnd="@dimen/spacing_middle"
+            android:layout_marginStart="@dimen/spacing_large"
             android:tint="@color/light_blue_400"
             app:srcCompat="@drawable/ic_textsms" />
 
@@ -49,16 +50,17 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:text="4 Comments"
+            android:textSize="@dimen/font_mlarge"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:textColor="@color/grey_40" />
 
         <ImageView
             android:background="?android:attr/selectableItemBackground"
             android:id="@+id/madeBtn"
-            android:layout_width="@dimen/spacing_mlarge"
-            android:layout_height="@dimen/spacing_mlarge"
-            android:layout_marginEnd="@dimen/spacing_small"
-            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_width="@dimen/spacing_xlarge"
+            android:layout_height="@dimen/spacing_xlarge"
+            android:layout_marginEnd="@dimen/spacing_middle"
+            android:layout_marginStart="@dimen/spacing_large"
             android:tint="#EC4381"
             app:srcCompat="@drawable/ic_pencil" />
 
@@ -68,6 +70,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:text="4 Mades"
+            android:textSize="@dimen/font_mlarge"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:textColor="@color/grey_40" />
 
