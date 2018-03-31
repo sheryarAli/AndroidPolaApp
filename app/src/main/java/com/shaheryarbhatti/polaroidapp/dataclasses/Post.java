@@ -22,6 +22,7 @@ public class Post implements Serializable {
     private int sourceType;
     @SerializedName("source")
     private String source;
+
     @SerializedName("titleText")
     private String titleText;
     @SerializedName("postDuration")
@@ -52,6 +53,7 @@ public class Post implements Serializable {
         this.comments = comments;
         this.made = made;
     }
+
 
     public int getUserType() {
         return userType;

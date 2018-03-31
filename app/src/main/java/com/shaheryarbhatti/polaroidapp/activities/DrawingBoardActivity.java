@@ -1,5 +1,7 @@
 package com.shaheryarbhatti.polaroidapp.activities;
 
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -45,16 +47,20 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
     private String filePath;
     private Uri imageURI;
     private boolean isLocked = false;
+    private View zoomContorlContainer, toolbarContainer;
     Bitmap bm, bitmapScalled, bmScalled, cs, grid;
     Canvas comboImage;
     private Toolbar toolbar;
     private int drawableId;
+    private float restoredScale;
+    private UtilImage utilImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing_board);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        utilImage = UtilImage.getInstance();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         ((ImageView) toolbar.findViewById(R.id.logoImageView)).setVisibility(View.GONE);
         setSupportActionBar(toolbar);
@@ -65,6 +71,8 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
             getSupportActionBar().setTitle("Draw");
         }
         imageView = (ImageView) findViewById(R.id.drawingBoardImageView);
+        toolbarContainer = findViewById(R.id.toolbarContainer);
+        zoomContorlContainer = findViewById(R.id.zoomContorlContainer);
 
         zoomInButton = (ImageButton) findViewById(R.id.zoomInButton);
         zoomOutButton = (ImageButton) findViewById(R.id.zoomOutButton);
@@ -117,13 +125,36 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState: scaleValue: " + attacher.getScale());
+        outState.putFloat("scaleValue", attacher.getScale());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        restoredScale = savedInstanceState.getFloat("scaleValue");
+        /*Log.d(TAG, "onRestoreInstanceState: restoreScale: "+ restoredScale);
+        restoreScaleValueOnOrientationChange();
+        Log.d(TAG, "onRestoreInstanceState: attacher.getScale(): "+ attacher.getScale());*/
+
+    }
+
+    private void restoreScaleValueOnOrientationChange() {
+        attacher.setScale(restoredScale);
+        zoomText.setText(String.format(Locale.ENGLISH, "%.1fx", restoredScale));
+
+    }
+
     private void setBm(int imageSourceType, BitmapFactory.Options options, String imagePath) {
         if (imageSourceType == 1) {
             bm = BitmapFactory.decodeFile(imagePath, options);
 
         } else {
             Log.d(TAG, "onCreate: else code");
-            drawableId = UtilImage.getDrawableId(this, imagePath);
+            drawableId = utilImage.getDrawableId(this, imagePath);
             bm = BitmapFactory.decodeResource(getResources(), drawableId, options);
         }
 
@@ -131,26 +162,48 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
 
     private void updateLockButton() {
         if (isLocked) {
+            // Code for Unlock
             lockBtn.setImageResource(R.drawable.ic_image_unlock);
             imageView.setEnabled(true);
-            zoomInButton.setVisibility(View.VISIBLE);
+            zoomContorlContainer.setVisibility(View.VISIBLE);
+            /*zoomInButton.setVisibility(View.VISIBLE);
             zoomOutButton.setVisibility(View.VISIBLE);
-            zoomText.setVisibility(View.VISIBLE);
+            zoomText.setVisibility(View.VISIBLE);*/
+            toolbarContainer.setVisibility(View.VISIBLE);
+            unlockDeviceOrientation();
         } else {
+            // Code for Lock
             lockBtn.setImageResource(R.drawable.ic_image_lock);
             imageView.setEnabled(false);
-            zoomInButton.setVisibility(View.INVISIBLE);
+            zoomContorlContainer.setVisibility(View.INVISIBLE);
+            /*zoomInButton.setVisibility(View.INVISIBLE);
             zoomOutButton.setVisibility(View.INVISIBLE);
-            zoomText.setVisibility(View.INVISIBLE);
+            zoomText.setVisibility(View.INVISIBLE);*/
+            toolbarContainer.setVisibility(View.INVISIBLE);
+            lockDeviceOrientation();
         }
+
         isLocked = !isLocked;
+    }
+
+    private void unlockDeviceOrientation() {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+    }
+
+    private void lockDeviceOrientation() {
+        int currentOrientation = getResources().getConfiguration().orientation;
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.zoomInButton:
-                Log.d(TAG, "ZoomInButton: " + attacher.getScale());
+
                 if (attacher.getScale() >= 1 && attacher.getScale() < 6) {
                     if ((attacher.getScale() % 1) != 0) {
                         attacher.setScale((float) Math.ceil(attacher.getScale()));
@@ -162,8 +215,6 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
                 }
                 break;
             case R.id.zoomOutButton:
-                Log.d(TAG, "ZoomOutButton: " + attacher.getScale());
-
                 if (attacher.getScale() > 1) {
                     if ((attacher.getScale() % 1) != 0) {
                         attacher.setScale((float) Math.floor(attacher.getScale()));

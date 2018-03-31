@@ -37,6 +37,7 @@ public class PhotoViewStencilActivity extends AppCompatActivity implements SeekB
     private Canvas canvas;
     private Toolbar toolbar;
     private Button letDrawBtn;
+    private UtilImage utilImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class PhotoViewStencilActivity extends AppCompatActivity implements SeekB
         setContentView(R.layout.activity_photo_view_stencil);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        utilImage = UtilImage.getInstance();
         ((ImageView) toolbar.findViewById(R.id.logoImageView)).setVisibility(View.GONE);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -56,7 +58,7 @@ public class PhotoViewStencilActivity extends AppCompatActivity implements SeekB
         letDrawBtn = (Button) findViewById(R.id.letDrawBtn);
         stencilSeekBar = (SeekBar) findViewById(R.id.stencilSeekBar);
         stencilSeekBar.setMax(255);
-        stencilSeekBar.setProgress(200);
+        stencilSeekBar.setProgress(128);
         stencilSeekBar.incrementProgressBy(1);
 
 
@@ -88,6 +90,19 @@ public class PhotoViewStencilActivity extends AppCompatActivity implements SeekB
         imageView.setImageBitmap(bMapScaled);
         originalBmp = bMapScaled.copy(bMapScaled.getConfig(), true);
 
+        initialStencilize();
+
+    }
+
+    private void initialStencilize() {
+
+        canvas = new Canvas(bMapScaled);
+
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(getColorMatrix()));
+        canvas.drawBitmap(bMapScaled, 0, 0, paint);
+
+        imageView.setImageBitmap(bMapScaled);
 
     }
 
@@ -95,7 +110,7 @@ public class PhotoViewStencilActivity extends AppCompatActivity implements SeekB
     @Override
     public void onClick(View v) {
         if (v == letDrawBtn) {
-            Bitmap bitmap = UtilImage.getBitmapFromImageView(imageView);
+            Bitmap bitmap = utilImage.getBitmapFromImageView(imageView);
             String imagePath = saveToInternalStorage(bitmap);
             Intent intent = new Intent(this, DrawingBoardActivity.class);
             intent.putExtra("imageType", 1);

@@ -20,6 +20,7 @@ public class ImageCapturedActivity extends AppCompatActivity implements View.OnC
     private Toolbar toolbar;
     private Bitmap bitmap;
     private String imagePath;
+    private UtilImage utilImage;
 
 
     @Override
@@ -27,6 +28,7 @@ public class ImageCapturedActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_captured);
         initViews();
+        utilImage = UtilImage.getInstance();
         ((ImageView) toolbar.findViewById(R.id.logoImageView)).setVisibility(View.GONE);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -51,7 +53,7 @@ public class ImageCapturedActivity extends AppCompatActivity implements View.OnC
 
         imagePath = getIntent().getStringExtra("image");
 //        Picasso.with(this).load(imagePath).fit().into(imageView);
-        UtilImage.setPicFromPath(this, imageView, imagePath);
+        utilImage.setPicFromPath(this, imageView, imagePath);
 
 
     }

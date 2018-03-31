@@ -1,6 +1,7 @@
 package com.shaheryarbhatti.polaroidapp.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -28,7 +29,6 @@ import android.widget.Toast;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.shaheryarbhatti.polaroidapp.Config;
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.adapters.GenericAdapter;
@@ -45,29 +45,41 @@ import java.util.ArrayList;
  */
 
 
-public class ItemSelelectedActivity extends AppCompatActivity implements View.OnClickListener, YouTubePlayer.OnInitializedListener {
+public class ItemSelelectedActivity extends AppCompatActivity implements View.OnClickListener, YouTubePlayer.OnInitializedListener/*, YouTubePlayer.OnFullscreenListener*/ {
 
+    /*@SuppressLint("InlinedApi")
+    private static final int PORTRAIT_ORIENTATION = Build.VERSION.SDK_INT < 9
+            ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            : ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT;
+
+    @SuppressLint("InlinedApi")
+    private static final int LANDSCAPE_ORIENTATION = Build.VERSION.SDK_INT < 9
+            ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;*/
 
     private final String TAG = "ItemSelelectedActivity";
     private Toolbar toolbar;
-    private TextView titleText, personNameText, professoinText, durationText;
+    private TextView titleText, personNameText, professoinText, durationText, likeText, commentText, madeText;
     private ImageView postImageView, commentImageView, madeImageView;
     private RecyclerView commentRecyclerView, madeRecyclerView;
-    private CircularImageView profileImageView;
+    private com.github.siyamed.shapeimageview.CircularImageView profileImageView;
     private ArrayList<Comment> commentList;
     private ArrayList<Made> madeList;
     private GenericAdapter<Comment> commentGenericAdapter;
     private GenericAdapter<Made> madeGenericAdapter;
     private LinearLayoutManager commentLayoutManager;
     private GridLayoutManager madeLayoutManager;
-    private View postContainer, commentSectionView, madeSectionView, socialContainer;
-    private TextView commentText, madeText;
+    private View postContainer, commentSectionView, madeSectionView, socialContainer, commentSectionSubView, btnContainer;
+    private TextView commentSectionText, madeSectionText;
     private Button drawBtn;
     private Post post;
     private final int MADE_COLUMNS = 3;
     private FrameLayout videoLayout;
     private ScrollView scroll;
     private String videoSource;
+    private UtilImage utilImage;
+    private YouTubePlayer yPlayer = null;
+    private boolean mAutoRotation = false;
 
 
     @Override
@@ -75,10 +87,12 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_selected);
         initViews();
+        utilImage = UtilImage.getInstance();
+//        mAutoRotation = Settings.System.getInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 1;
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Stencil");
         commentLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         madeLayoutManager = new GridLayoutManager(this, MADE_COLUMNS);
         prepareViews();
@@ -94,18 +108,26 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
         cardParams.setMarginStart(0);
         ((CardView) postContainer).setLayoutParams(cardParams);
         titleText = (TextView) postContainer.findViewById(R.id.titleText);
-        profileImageView = (CircularImageView) postContainer.findViewById(R.id.profileImageView);
+        profileImageView = (com.github.siyamed.shapeimageview.CircularImageView) postContainer.findViewById(R.id.profileImageView);
         personNameText = (TextView) postContainer.findViewById(R.id.personNameText);
         professoinText = (TextView) postContainer.findViewById(R.id.professoinText);
         postImageView = (ImageView) postContainer.findViewById(R.id.postImageView);
         durationText = (TextView) postContainer.findViewById(R.id.durationText);
+        socialContainer = postContainer.findViewById(R.id.socialContainer);
+        likeText = (TextView) socialContainer.findViewById(R.id.likeText);
+        commentText = (TextView) socialContainer.findViewById(R.id.commentText);
+        madeText = (TextView) socialContainer.findViewById(R.id.madeText);
+
+        btnContainer = findViewById(R.id.btnContainer);
         commentSectionView = findViewById(R.id.commentSectionView);
         madeSectionView = findViewById(R.id.madeSectionView);
 
         drawBtn = (Button) postContainer.findViewById(R.id.drawBtn);
-        commentText = (TextView) commentSectionView.findViewById(R.id.sectionText);
+        commentSectionText = (TextView) commentSectionView.findViewById(R.id.sectionText);
+
         commentImageView = (ImageView) commentSectionView.findViewById(R.id.sectionImageView);
-        madeText = (TextView) madeSectionView.findViewById(R.id.sectionText);
+        commentSectionSubView = commentSectionView.findViewById(R.id.commentSectionSubView);
+        madeSectionText = (TextView) madeSectionView.findViewById(R.id.sectionText);
         madeImageView = (ImageView) madeSectionView.findViewById(R.id.sectionImageView);
 
         commentRecyclerView = (RecyclerView) commentSectionView.findViewById(R.id.sectoinsRecyclerView);
@@ -121,32 +143,53 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
     }
 
     private void prepareViews() {
-        commentText.setText("Comments");
-        madeText.setText("Mades");
-        commentImageView.setImageBitmap(UtilImage.getBitmap(this, "ic_textsms"));
+        commentSectionText.setText("Comments");
+        madeSectionText.setText("Mades");
+        commentSectionSubView.setVisibility(View.VISIBLE);
+        ((com.github.siyamed.shapeimageview.CircularImageView) commentSectionSubView.findViewById(R.id.userImageView)).setImageBitmap(utilImage.getBitmap(this, "martin"));
+        commentImageView.setImageBitmap(utilImage.getBitmap(this, "ic_textsms"));
         commentImageView.setColorFilter(ContextCompat.getColor(this, R.color.light_blue_400));
-        madeImageView.setImageBitmap(UtilImage.getBitmap(this, "ic_pencil"));
+        madeImageView.setImageBitmap(utilImage.getBitmap(this, "ic_pencil"));
         Bundle data = getIntent().getBundleExtra("post");
         post = (Post) data.getSerializable("post");
         titleText.setText(post.getTitleText());
         durationText.setText(post.getPostDuration() + " ago");
         professoinText.setText(post.getProfession());
         personNameText.setText(post.getUserName());
-        profileImageView.setImageBitmap(UtilImage.getBitmap(this, post.getUserPicture()));
+
+        profileImageView.setImageBitmap(utilImage.getBitmapFromDrawableResuource(this,
+                utilImage.getDrawableId(this, post.getUserPicture())));
         commentList = post.getComments();
         madeList = post.getMade();
+        likeText.setText(post.getPostLikes() + " Likes");
+        commentText.setText(commentList.size() + " Comments");
+        madeText.setText(madeList.size() + " Mades");
         Log.d(TAG, "prepareViews: for Debugging");
         prepareMadeRecyclerView();
         prepareCommentRecylerView();
         if (post.getSourceType() == 1) {
             postImageView.setVisibility(View.VISIBLE);
             videoLayout.setVisibility(View.GONE);
-            drawBtn.setVisibility(View.VISIBLE);
-            UtilImage.loadImageWithPicasso(this, postImageView, post.getSource());
+            btnContainer.setVisibility(View.VISIBLE);
+            postImageView.setImageBitmap(utilImage.loadScaledDownBitmapForDisplay(this,
+                    utilImage.getDrawableId(this, post.getSource()), 200, 200));
         } else if (post.getSourceType() == 2) {
-            videoSource = post.getSource().split("=")[1];
-            setVideo();
-            drawBtn.setVisibility(View.GONE);
+            postImageView.setVisibility(View.VISIBLE);
+            videoLayout.setVisibility(View.GONE);
+            postImageView.setImageBitmap(utilImage.loadScaledDownBitmapForDisplay(this,
+                    utilImage.getDrawableId(this, post.getSource()), 200, 200));
+            postImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String videoPath = utilImage.generateDownloadPath(post.getSource() + ".mp4");
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(videoPath), "video/mp4");
+                    startActivity(intent);
+                }
+            });
+//            setVideo();
+            btnContainer.setVisibility(View.GONE);
         }
 
 
@@ -166,7 +209,7 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
             @Override
             public void onBindData(RecyclerView.ViewHolder holder, Comment val, int position) {
                 CommentViewHolder viewHolder = (CommentViewHolder) holder;
-                viewHolder.userImageView.setImageBitmap(UtilImage.getBitmap(context, val.getUserPicture()));
+                viewHolder.userImageView.setImageBitmap(utilImage.getBitmap(context, val.getUserPicture()));
                 viewHolder.userText.setText(val.getUserName());
                 viewHolder.commentText.setText(val.getCommentText());
                 viewHolder.timeText.setText(val.getCommentDuration() + " ago");
@@ -197,7 +240,16 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
             @Override
             public void onBindData(RecyclerView.ViewHolder holder, Made val, int position) {
                 MadeViewHolder viewHolder = (MadeViewHolder) holder;
-                UtilImage.loadImageWithPicasso(context, viewHolder.madeImageView, val.getMadeSource());
+                viewHolder.madeImageView.setTag(position);
+                utilImage.loadImageWithPicasso(context, viewHolder.madeImageView, val.getMadeSource());
+                viewHolder.madeImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = Integer.parseInt(v.getTag() + "");
+                        moveToMadeActivity(madeGenericAdapter.getItem(position).getMadeSource());
+
+                    }
+                });
 
 
             }
@@ -205,9 +257,18 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
             @Override
             public void onItemClick(View view) {
 
+
             }
         };
         madeRecyclerView.setAdapter(madeGenericAdapter);
+
+    }
+
+    private void moveToMadeActivity(String made) {
+        Intent intent = new Intent(ItemSelelectedActivity.this, MadeActivity.class);
+        intent.putExtra("made", made);
+        startActivity(intent);
+
 
     }
 
@@ -243,12 +304,12 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
 
 
     private class CommentViewHolder extends RecyclerView.ViewHolder {
-        private CircularImageView userImageView;
+        private com.github.siyamed.shapeimageview.CircularImageView userImageView;
         private TextView userText, timeText, commentText;
 
         public CommentViewHolder(View itemView) {
             super(itemView);
-            userImageView = (CircularImageView) itemView.findViewById(R.id.userImageView);
+            userImageView = (com.github.siyamed.shapeimageview.CircularImageView) itemView.findViewById(R.id.userImageView);
             userText = (TextView) itemView.findViewById(R.id.userText);
             timeText = (TextView) itemView.findViewById(R.id.timeText);
             commentText = (TextView) itemView.findViewById(R.id.commentText);
@@ -258,10 +319,12 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
 
     private class MadeViewHolder extends RecyclerView.ViewHolder {
         private ImageView madeImageView;
+        private View rootView;
 
 
         public MadeViewHolder(View itemView) {
             super(itemView);
+            rootView = itemView;
             madeImageView = (ImageView) itemView.findViewById(R.id.madeImageView);
 
         }
@@ -280,13 +343,35 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
-        youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION |
-                YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE);
+        youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION
+                | YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE
+        );
+
 
         if (!wasRestored) {
             youTubePlayer.cueVideo(videoSource);
+        }/*else {
+            youTubePlayer.play();
+        }*/
+        /*
+        yPlayer = youTubePlayer;
+        youTubePlayer.setOnFullscreenListener(ItemSelelectedActivity.this);
+        if (mAutoRotation) {
+            youTubePlayer.addFullscreenControlFlag(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION
+                    | YouTubePlayer.FULLSCREEN_FLAG_CONTROL_SYSTEM_UI
+                    | YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE
+                    | YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
+        } else {
+            youTubePlayer.addFullscreenControlFlag(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION
+                    | YouTubePlayer.FULLSCREEN_FLAG_CONTROL_SYSTEM_UI
+                    | YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
         }
+
+        if (!wasRestored) {
+            yPlayer.loadVideo(videoSource);
+        }*/
     }
+
 
     @Override
     public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
@@ -300,5 +385,12 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
         }
     }
 
-
+    /*@Override
+    public void onFullscreen(boolean b) {
+        if (b) {
+            setRequestedOrientation(LANDSCAPE_ORIENTATION);
+        } else {
+            setRequestedOrientation(PORTRAIT_ORIENTATION);
+        }
+    }*/
 }
