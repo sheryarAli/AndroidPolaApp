@@ -3,8 +3,6 @@ package com.shaheryarbhatti.polaroidapp.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -19,17 +17,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.shaheryarbhatti.polaroidapp.Config;
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.adapters.GenericAdapter;
 import com.shaheryarbhatti.polaroidapp.dataclasses.Comment;
@@ -74,7 +71,7 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
     private Button drawBtn;
     private Post post;
     private final int MADE_COLUMNS = 3;
-    private FrameLayout videoLayout;
+    private VideoView videoLayout;
     private ScrollView scroll;
     private String videoSource;
     private UtilImage utilImage;
@@ -134,7 +131,7 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
         madeRecyclerView = (RecyclerView) madeSectionView.findViewById(R.id.sectoinsRecyclerView);
         drawBtn.setOnClickListener(this);
         toolbar.findViewById(R.id.logoImageView).setVisibility(View.GONE);
-        videoLayout = (FrameLayout) postContainer.findViewById(R.id.frame_fragment);
+        videoLayout = (VideoView) postContainer.findViewById(R.id.frame_fragment);
 
         ScrollView scroll = (ScrollView) findViewById(R.id.scrollView);
         scroll.setFocusableInTouchMode(true);
@@ -174,6 +171,7 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
             postImageView.setImageBitmap(utilImage.loadScaledDownBitmapForDisplay(this,
                     utilImage.getDrawableId(this, post.getSource()), 200, 200));
         } else if (post.getSourceType() == 2) {
+            final String videoPath = utilImage.generateDownloadPath(post.getSource() + ".mp4");
             postImageView.setVisibility(View.VISIBLE);
             videoLayout.setVisibility(View.GONE);
             postImageView.setImageBitmap(utilImage.loadScaledDownBitmapForDisplay(this,
@@ -181,14 +179,13 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
             postImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String videoPath = utilImage.generateDownloadPath(post.getSource() + ".mp4");
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.setDataAndType(Uri.parse(videoPath), "video/mp4");
                     startActivity(intent);
                 }
             });
-//            setVideo();
+            setVideo(videoPath);
             btnContainer.setVisibility(View.GONE);
         }
 
@@ -331,14 +328,20 @@ public class ItemSelelectedActivity extends AppCompatActivity implements View.On
     }
 
 
-    private void setVideo() {
-        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-        youTubePlayerFragment.initialize(Config.YOUTUBE_API_KEY, this);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_fragment, youTubePlayerFragment);
-        fragmentTransaction.commit();
+    private void setVideo(String URL) {
+//        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+//        youTubePlayerFragment.initialize(Config.YOUTUBE_API_KEY, this);
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.frame_fragment, youTubePlayerFragment);
+//        fragmentTransaction.commit();
+        Uri uri = Uri.parse(URL); //Declare your url here.
 
+
+        videoLayout.setMediaController(new MediaController(this));
+        videoLayout.setVideoURI(uri);
+        videoLayout.requestFocus();
+        videoLayout.start();
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
@@ -25,7 +26,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;*/
     private AppCompatEditText emailEdt, passwordEdt;
-    private Button loginButton, fbSigninButton, twitterSigninButton, logoutButton, signupBtn;
+    private Button loginButton, fbSigninButton, twitterSigninButton, logoutButton;
+    private TextView signupBtn;
     //    private CallbackManager callbackManager;
     //   FB REQUEST_CODE: 64206
 //    private TwitterAuthClient mTwitterAuthClient = new TwitterAuthClient();
@@ -130,8 +132,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v == loginButton) {
-            String pushToken = FirebaseInstanceId.getInstance().getToken();
-            handleEmailAndPasswordLogin(emailEdt.getText().toString(), passwordEdt.getText().toString(), pushToken);
+            if (isEmailValid(emailEdt.getText().toString())) {
+                String pushToken = FirebaseInstanceId.getInstance().getToken();
+                handleEmailAndPasswordLogin(emailEdt.getText().toString(), passwordEdt.getText().toString(), pushToken);
+            }
             /*handleEmailAndPasswordLogin(emailEdt.getText().toString(), passwordEdt.getText().toString());*/
         }
         if (v == signupBtn) {
@@ -152,6 +156,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
 
     private void handleEmailAndPasswordLogin(String email, String password, String pushToken) {
         String loginUrl = getResources().getString(R.string.login_test_url);

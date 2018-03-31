@@ -6,6 +6,7 @@ import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.androidnetworking.AndroidNetworking;
+import com.google.firebase.FirebaseApp;
 import com.twitter.sdk.android.core.Twitter;
 
 /**
@@ -16,6 +17,7 @@ public class PolaroidApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        FirebaseApp.initializeApp(this);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         Twitter.initialize(this);
         AndroidNetworking.initialize(getApplicationContext());

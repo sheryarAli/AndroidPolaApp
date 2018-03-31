@@ -33,7 +33,7 @@ public class SplashActicity extends AppCompatActivity {
         } catch (NoSuchAlgorithmException e) {
 
         }*/
-        startActivity(new Intent(SplashActicity.this, PostCreationActivity.class));
+        startActivity(new Intent(SplashActicity.this, MainActivity.class));
         finish();
     }
 }

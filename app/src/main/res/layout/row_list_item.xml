@@ -4,13 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="visible"
-    app:cardCornerRadius="0dp"
     android:layout_marginLeft="@dimen/spacing_medium"
     android:layout_marginRight="@dimen/spacing_medium"
+    android:visibility="visible"
+    app:cardCornerRadius="0dp"
     app:cardElevation="4dp"
-    app:cardUseCompatPadding="true"
-    app:cardMaxElevation="4dp">
+    app:cardMaxElevation="4dp"
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,29 +60,29 @@
                     android:id="@+id/professoinText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="Hwy, Carthage"
                     android:background="#71A332"
-                    android:paddingStart="@dimen/spacing_small"
+                    android:gravity="center_vertical"
                     android:paddingEnd="@dimen/spacing_small"
+                    android:paddingStart="@dimen/spacing_small"
+                    android:text="Hwy, Carthage"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:textColor="@android:color/white"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <View
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="0dp" />
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/durationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:text="3h ago"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:textColor="@color/black" />
         </LinearLayout>
 
         <TextView
@@ -100,15 +100,15 @@
             android:id="@+id/postImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
             android:background="@color/grey_500"
             android:paddingBottom="0.5dp"
             android:paddingTop="0.5dp"
-            android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:visibility="gone"
             app:srcCompat="@drawable/farris" />
 
-        <FrameLayout
+        <VideoView
             android:id="@+id/frame_fragment"
             android:layout_width="match_parent"
             android:layout_height="201dp"
@@ -120,40 +120,40 @@
 
         <LinearLayout
             android:id="@+id/btnContainer"
-            android:paddingBottom="@dimen/spacing_xlarge"
-            android:paddingStart="@dimen/spacing_large"
-            android:paddingEnd="@dimen/spacing_large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:paddingBottom="@dimen/spacing_xlarge"
+            android:paddingEnd="@dimen/spacing_large"
+            android:paddingStart="@dimen/spacing_large">
 
             <Button
-                android:textColor="@android:color/white"
-                android:background="@drawable/button_effect_2"
-                android:paddingStart="@dimen/spacing_large"
-                android:paddingEnd="@dimen/spacing_large"
-                android:text="@string/draw"
                 android:id="@+id/drawBtn"
                 android:layout_width="140dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_effect_2"
+                android:paddingEnd="@dimen/spacing_large"
+                android:paddingStart="@dimen/spacing_large"
+                android:text="@string/draw"
+                android:textColor="@android:color/white" />
 
             <View
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="0dp" />
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <Button
 
-                android:enabled="false"
-                android:textColor="@android:color/white"
-                android:background="@drawable/button_effect_2"
-                android:paddingStart="@dimen/spacing_large"
-                android:paddingEnd="@dimen/spacing_large"
                 android:id="@+id/sendEmailBtn"
-                android:text="Send To Email"
                 android:layout_width="140dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_effect_2"
+                android:enabled="false"
+                android:paddingEnd="@dimen/spacing_large"
+                android:paddingStart="@dimen/spacing_large"
+                android:text="Send To Email"
+                android:textColor="@android:color/white" />
 
 
         </LinearLayout>
