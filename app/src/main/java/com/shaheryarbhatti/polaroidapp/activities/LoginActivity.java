@@ -183,7 +183,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return true;
     }
 
-    private void handleEmailAndPasswordLogin(String email, String password, String pushToken) {
+    private void handleEmailAndPasswordLogin(String email, String password, final String pushToken) {
         String loginUrl = getResources().getString(R.string.login_test_url);
         Log.d(TAG, "handleEmailAndPasswordLogin: for debugging");
         AndroidNetworking.post(loginUrl)
@@ -196,6 +196,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onResponse(String response) {
                         try {
+                            Log.d(TAG, "onResponse: " + response);
                             JSONObject jsonObject = new JSONObject(response);
                             boolean isSuccess = jsonObject.getBoolean("success");
 
@@ -208,6 +209,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 preferences.setName(userObj.getString("name"));
                                 preferences.setEmail(userObj.getString("email"));
                                 preferences.setDOB(userObj.getString("dob"));
+                                preferences.setPushToken(pushToken);
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finish();
                             }

@@ -8,6 +8,7 @@
     <string name="featured_fragment">Featured</string>
     <string name="popular_fragment">Popular</string>
     <string name="take_photo_action">Take Photo</string>
+    <string name="log_out_action">Log Out</string>
     <string name="search_action">Search</string>
     <string name="save_draw">Save And Draw</string>
     <string name="draw">Let\'s Draw</string>

@@ -29,12 +29,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.StringRequestListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.fragments.DashboardFragment;
 import com.shaheryarbhatti.polaroidapp.fragments.FeaturedFragment;
 import com.shaheryarbhatti.polaroidapp.fragments.PopularFragment;
+import com.shaheryarbhatti.polaroidapp.preferences.LocalStoragePreferences;
 import com.shaheryarbhatti.polaroidapp.utilities.UtilImage;
 import com.shaheryarbhatti.polaroidapp.viewpagers.MainFragmentPagerAdapter;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     private UtilImage utilImage;
     boolean doubleBackToExitPressedOnce = false;
     private FloatingActionButton fabAdd;
+    private LocalStoragePreferences preferences;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -67,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        preferences = new LocalStoragePreferences(this);
         utilImage = UtilImage.getInstance();
         tabs = findViewById(R.id.tabs);
         toolbar = findViewById(R.id.toolbar);
@@ -153,7 +164,9 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
             case R.id.takePhotoAction:
                 showPopUpMenu(item.getActionView());
                 break;
-
+            case R.id.logout:
+                showLogOutMenu(item.getActionView());
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -169,6 +182,79 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
                 }
         );
         builder.show();
+    }
+
+    private void showLogOutMenu(View view) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Logout");
+        builder.setMessage("Are you Sure you want to logout?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                handleLogOut(preferences.getPushToken(), preferences.getToken());
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+//        builder.setItems(takePhotoMenu, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        onMenuItemClick(which);
+//                    }
+//                }
+//        );
+        builder.show();
+    }
+
+    private void handleLogOut(String pushToken, String token) {
+        String logOutUrl = getResources().getString(R.string.logout_test_url);
+        Log.d(TAG, "handleLogOut: for debugging");
+        AndroidNetworking.post(logOutUrl)
+                .addHeaders("Authorization", token)
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("push_token", pushToken)
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            Log.d(TAG, "onResponse: " + response);
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean isSuccess = jsonObject.getBoolean("success");
+
+                            if (isSuccess) {
+                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            FirebaseInstanceId.getInstance().deleteInstanceId();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }).start();
+                                preferences.clearAll();
+                                finish();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Log.d(TAG, "onError: " + anError.getErrorBody());
+                    }
+                });
+
     }
 
     private boolean requestCameraAndCameraPermission() {

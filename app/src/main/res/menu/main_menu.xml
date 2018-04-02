@@ -8,5 +8,9 @@
         android:icon="@drawable/ic_camera2"
         android:title="@string/take_photo_action"
         app:showAsAction="ifRoom" />
-
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/ic_logout"
+        android:title="@string/take_photo_action"
+        app:showAsAction="ifRoom" />
 </menu>

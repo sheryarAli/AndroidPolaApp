@@ -17,6 +17,7 @@ public class LocalStoragePreferences {
     private static final String USERID = "id";
     private static final String EMAIL = "email";
     private static final String DOB = "dob";
+    private static final String PUSH_TOKEN = "push_token";
 
 
     public LocalStoragePreferences(Context context) {
@@ -86,6 +87,15 @@ public class LocalStoragePreferences {
         return context.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE).getString(TOKEN, null);
     }
 
+    public void setPushToken(String token) {
+        SharedPreferences.Editor sp = context.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE).edit();
+        sp.putString(PUSH_TOKEN, token.trim());
+        sp.apply();
+    }
+
+    public String getPushToken() {
+        return context.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE).getString(PUSH_TOKEN, null);
+    }
 
     public void clearAll() {
         SharedPreferences.Editor sp = context.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE).edit();

@@ -70,6 +70,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        toolbar = findViewById(R.id.toolbar);
         ((ImageView) toolbar.findViewById(R.id.logoImageView)).setVisibility(View.GONE);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -213,7 +214,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private void handleSignUp(String name, String email, String password, String dob, String gender, String pushToken) {
+    private void handleSignUp(String name, String email, String password, String dob, String gender, final String pushToken) {
         String signUpUrl = getResources().getString(R.string.signup_test_url);
 
         AndroidNetworking.post(signUpUrl)
@@ -242,6 +243,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                                 preferences.setName(userObj.getString("name"));
                                 preferences.setEmail(userObj.getString("email"));
                                 preferences.setDOB(userObj.getString("dob"));
+                                preferences.setPushToken(pushToken);
                                 startActivity(new Intent(SignupActivity.this, MainActivity.class));
                                 finish();
                             }
