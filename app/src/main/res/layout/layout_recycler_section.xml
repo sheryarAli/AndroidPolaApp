@@ -59,6 +59,7 @@
             android:visibility="gone">
 
             <LinearLayout
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/spacing_large"
                 android:paddingRight="@dimen/spacing_large"
@@ -73,6 +74,7 @@
                     app:srcCompat="@drawable/clark" />
 
                 <Button
+
                     android:minHeight="0dp"
                     android:background="@color/transparent"
                     android:textAllCaps="false"
@@ -107,6 +109,8 @@
                     android:paddingBottom="@dimen/spacing_middle"
                     android:hint="Write A Comment"
                     android:textSize="@dimen/font_large"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
                     android:background="@drawable/comment_edt_background"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

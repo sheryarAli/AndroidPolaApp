@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        preferences = new LocalStoragePreferences(this);
+
 /*        currentUser = mAuth.getCurrentUser();
         if (currentUser!=null){
         Log.d(TAG, "onStart: login: " + (currentUser != null));
@@ -82,6 +82,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 });*/
         setContentView(R.layout.activity_login);
+        preferences = new LocalStoragePreferences(this);
+        if (preferences.isLoggedIn()) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
         emailEdt = findViewById(R.id.emailEdt);
         passwordEdt = findViewById(R.id.passwordEdt);
         fbSigninButton = findViewById(R.id.fb_sign_in_button);
@@ -127,12 +132,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         LoginManager.getInstance().logOut();
     }*/
 
+
 //  TODO onClick
 
     @Override
     public void onClick(View v) {
         if (v == loginButton) {
-            if (isEmailValid(emailEdt.getText().toString())) {
+            if (validateUi()) {
                 String pushToken = FirebaseInstanceId.getInstance().getToken();
                 handleEmailAndPasswordLogin(emailEdt.getText().toString(), passwordEdt.getText().toString(), pushToken);
             }
@@ -140,6 +146,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         if (v == signupBtn) {
             startActivity(new Intent(LoginActivity.this, SignupActivity.class));
+            finish();
         }
         /*if (v == fbSigninButton) {
             fbSignIn();
@@ -158,6 +165,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private boolean validateUi() {
+        if (emailEdt.getText().toString().isEmpty()) {
+            emailEdt.setError("Email Required");
+            return false;
+        }
+        if (passwordEdt.getText().toString().isEmpty()) {
+            emailEdt.setError("Password Required");
+            return false;
+        }
+        if (!isEmailValid(emailEdt.getText().toString())) {
+            emailEdt.setError("Inavlid Email");
+            return false;
+        }
+        return true;
     }
 
     private void handleEmailAndPasswordLogin(String email, String password, String pushToken) {
@@ -186,6 +209,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 preferences.setEmail(userObj.getString("email"));
                                 preferences.setDOB(userObj.getString("dob"));
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                finish();
                             }
 
                         } catch (JSONException e) {

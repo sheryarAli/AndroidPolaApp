@@ -55,6 +55,7 @@
                     android:textSize="@dimen/font_mxlarge" />
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/professoinText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -97,29 +98,28 @@
             android:textSize="@dimen/font_mlarge"
             android:visibility="visible" />
 
-        <ImageView
-            android:id="@+id/postImageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/spacing_large"
-            android:layout_marginRight="@dimen/spacing_large"
-            android:background="@color/grey_500"
-            android:paddingBottom="0.5dp"
-            android:paddingTop="0.5dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:visibility="gone"
-            app:srcCompat="@drawable/carsusol" />
-
         <FrameLayout
-            android:id="@+id/frame_fragment"
             android:layout_width="match_parent"
-            android:layout_height="691dp"
-            android:layout_marginLeft="@dimen/spacing_large"
-            android:layout_marginRight="@dimen/spacing_large"
-            android:visibility="visible">
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/postImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:background="@color/grey_500"
+                android:paddingBottom="0.5dp"
+                android:paddingTop="0.5dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/farris" />
 
+            <ImageView
+                android:visibility="visible"
+                android:id="@+id/playIV"
+                android:src="@drawable/ic_play_action"
+                android:layout_gravity="center"
+                android:layout_width="150dp"
+                android:layout_height="150dp" />
         </FrameLayout>
 
         <include

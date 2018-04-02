@@ -7,7 +7,11 @@ import java.io.Serializable;
  */
 
 public class Comment implements Serializable {
+
+    private String commentId;
     private String userName;
+    private String postId;
+    private String userId;
     private String userPicture;
     private String professon;
     private String commentDuration;
@@ -22,6 +26,22 @@ public class Comment implements Serializable {
         this.professon = professon;
         this.commentDuration = commentDuration;
         this.commentText = commentText;
+    }
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {
@@ -62,5 +82,13 @@ public class Comment implements Serializable {
 
     public void setCommentText(String commentText) {
         this.commentText = commentText;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 }

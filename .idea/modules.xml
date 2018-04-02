@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidPolaApp.iml" filepath="$PROJECT_DIR$/AndroidPolaApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PolaroidApp.iml" filepath="$PROJECT_DIR$/PolaroidApp.iml" />
       <module fileurl="file://D:\Shahzore\AndroidPolaApp\PolaroidApp.iml" filepath="D:\Shahzore\AndroidPolaApp\PolaroidApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E5E4E5"
+    android:background="#12202b"
     tools:context="com.shaheryarbhatti.polaroidapp.activities.SignupActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -27,6 +27,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:visibility="visible"
+        app:cardBackgroundColor="#12202b"
         app:cardCornerRadius="0dp"
         app:cardElevation="4dp"
         app:cardMaxElevation="4dp"
@@ -40,108 +41,142 @@
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@android:color/white"
+            android:background="#12202b"
             android:orientation="vertical">
 
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_large"
+
                 android:textColorHint="@color/grey_40">
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/nameEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:textColor="@color/grey_40"
                     android:hint="Name" />
 
             </android.support.design.widget.TextInputLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/grey_40" />
 
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_large"
+
                 android:textColorHint="@color/grey_40">
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/emailEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/grey_40"
+                    android:background="@null"
                     android:hint="Email" />
 
             </android.support.design.widget.TextInputLayout>
 
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/grey_40" />
 
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_large"
+
                 android:textColorHint="@color/grey_40">
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/dobEdt"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:textColor="@color/grey_40"
                     android:focusable="false"
-                    android:inputType="date"
                     android:hint="Date Of Birth" />
+
 
             </android.support.design.widget.TextInputLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/grey_40" />
+
             <RadioGroup
-                android:layout_marginTop="@dimen/spacing_smlarge"
+                android:layout_marginTop="16dp"
                 android:id="@+id/genderRg"
+
                 android:orientation="horizontal"
-                android:layout_marginStart="@dimen/spacing_large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:checked="true"
 
-                <RadioButton
+                    android:textStyle="bold"
+                    android:textColor="@color/grey_40"
                     android:id="@+id/maleRadio"
-                    android:textStyle="bold"
-                    android:textColor="@color/grey_40"
-                    android:text="Male"
+                    android:theme="@style/RadioButtonStyle"
+                    android:text="male"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <RadioButton
-                    android:id="@+id/femaleRadio"
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:theme="@style/RadioButtonStyle"
+
                     android:textStyle="bold"
                     android:textColor="@color/grey_40"
-                    android:text="Female"
+                    android:id="@+id/femmaleRadio"
+                    android:text="female"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-
             </RadioGroup>
 
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_large"
                 android:textColorHint="@color/grey_40">
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/passwordEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:textColor="@color/grey_40"
                     android:hint="Password"
-                    android:inputType="textVisiblePassword" />
+                    android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/grey_40" />
 
 
         </LinearLayout>
+
 
     </android.support.v7.widget.CardView>
 
@@ -154,7 +189,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/btn_rounded_accent"
+        android:background="@drawable/button_effect_2"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:text="@string/sign_up"

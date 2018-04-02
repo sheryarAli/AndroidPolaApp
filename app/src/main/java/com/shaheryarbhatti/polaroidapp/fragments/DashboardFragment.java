@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,18 +19,25 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
+import com.google.gson.GsonBuilder;
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.adapters.GenericAdapter;
-import com.shaheryarbhatti.polaroidapp.dataclasses.DummyData;
 import com.shaheryarbhatti.polaroidapp.dataclasses.Post;
+import com.shaheryarbhatti.polaroidapp.dataclasses.ServerPost;
+import com.shaheryarbhatti.polaroidapp.preferences.LocalStoragePreferences;
 import com.shaheryarbhatti.polaroidapp.utilities.EndlessRecyclerViewScrollListener;
 import com.shaheryarbhatti.polaroidapp.utilities.UtilImage;
+import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 /**
@@ -47,8 +55,10 @@ public class DashboardFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private RecyclerView dashboardRecylcerView;
-    private GenericAdapter<Post> postAdapter;
+    private GenericAdapter<ServerPost> postAdapter;
+    //    private GenericAdapter<ServerPost> serverPostAdapter;
     private ArrayList<Post> postList;
+    private ArrayList<ServerPost> serverPosts;
     private LinearLayoutManager linearLayoutManager;
     private String youtubeThumbnailUrl = "https://img.youtube.com/vi/";
     private UtilImage utilImage;
@@ -58,6 +68,9 @@ public class DashboardFragment extends Fragment {
     private final int FEATURED_FEED = 1;
     private final int TOP_FEED = 2;
     private int limit = 5, skip = 0, count = 0;
+    private LocalStoragePreferences preferences;
+    private long currentTime;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 
 
     // TODO: Rename and change types of parameters
@@ -94,15 +107,17 @@ public class DashboardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         utilImage = UtilImage.getInstance();
+        preferences = new LocalStoragePreferences(getContext());
         if (getArguments() != null) {
             mParam1 = getArguments().getInt(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        currentTime = Calendar.getInstance().getTimeInMillis();
 
 //        iniilizing post array list
         postList = new ArrayList<>();
-        switch (mParam1) {
+        serverPosts = new ArrayList<>();
+        /*switch (mParam1) {
             case 0:
                 postList.addAll(new DummyData().getDashboardPosts(getContext()));
                 break;
@@ -112,9 +127,10 @@ public class DashboardFragment extends Fragment {
             case 2:
                 postList.addAll(new DummyData().getPoplularPosts(getContext()));
                 break;
-        }
+        }*/
 
-        loadBitmapImages();
+//        loadBitmapImages();
+        loadMore();
         Log.d(TAG, "onCreate: For Debugging");
     }
 
@@ -135,9 +151,14 @@ public class DashboardFragment extends Fragment {
 
 
         }
-        String authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhYWU1Y2YxMDJiODI5MjZmODA2NjZlMSIsInByb2ZpbGVfcGljIjoic29tZV91cmwiLCJmaXJzdF9uYW1lIjoiTXVoYW1tYWQiLCJsYXN0X25hbWUiOiJQYXRlbCIsIm1pZGRsZV9uYW1lIjoiQWJkdWxNb2l6IiwibW9iaWxlX251bWJlciI6Iis5MjMzMjM0Nzg4MzIiLCJlbWFpbCI6ImFiZHVsbW9pemVuZysxMkBnbWFpbC5jb20iLCJkb2IiOiIxOTkyLTEwLTE0VDE5OjAwOjAwLjAwMFoiLCJ0eXBlIjoiYWRtaW4iLCJpYXQiOjE1MjEzODg1OTYsImV4cCI6MTU4MTM4ODUzNn0.l6XQcSGN7QvxOnnzkTNQByCAmIoHxtDj6FKxRX-2fUw";
-        AndroidNetworking.post(postFeedUrl)
+        Log.d(TAG, "populatePostList: postFeedUrl: " + postFeedUrl);
+        String authorization = preferences.getToken();
+        Log.d(TAG, "populatePostList: token: " + authorization);
+        Log.d(TAG, "populatePostList: limit: " + limit + " skip: " + skip);
+        AndroidNetworking.get(postFeedUrl)
                 .addHeaders("Authorization", authorization)
+                .addQueryParameter("limit", limit + "")
+                .addQueryParameter("skip", skip + "")
 
                 .build()
                 .getAsString(new StringRequestListener() {
@@ -147,10 +168,32 @@ public class DashboardFragment extends Fragment {
 
                         try {
                             JSONObject jsonObject = new JSONObject(response);
+                            boolean isSuccess = jsonObject.getBoolean("success");
+                            if (isSuccess) {
+
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+//                                count = jsonObject.getInt("count");
+                                skip += jsonArray.length();
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    ServerPost post = new GsonBuilder().create().fromJson(jsonArray.getJSONObject(i).toString(), ServerPost.class);
+                                    Log.d(TAG, "onResponse: postId: " + post.getPostId());
+                                    serverPosts.add(post);
+                                }
+                                postAdapter.notifyDataSetChanged();
+                            }
+
+                            /*String postId = dataObject.getString("_id");
+                            boolean isFeatured = dataObject.getBoolean("isFeatured");
+                            String title = dataObject.getString("title");
+                            String type = dataObject.getString("type");
+                            String createdAt = dataObject.getString("created_at");*/
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
+
                     }
 
                     @Override
@@ -158,6 +201,12 @@ public class DashboardFragment extends Fragment {
                         Log.d(TAG, "onError: " + anError.getErrorBody());
                     }
                 });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     private void loadMore() {
@@ -241,9 +290,9 @@ public class DashboardFragment extends Fragment {
     }
 
 
-    private void onPostViewClicked(View view, Post post) {
+    private void onPostViewClicked(View view, String postId) {
         Log.d(TAG, "onPostViewClicked: for debugging");
-        onButtonPressed(post);
+        onButtonPressed(postId);
 
     }
 
@@ -252,13 +301,13 @@ public class DashboardFragment extends Fragment {
 
     }
 
-    private void onCommentViewClicked(View view, Post post) {
-        onButtonPressed(post);
+    private void onCommentViewClicked(View view, String postId) {
+        onButtonPressed(postId);
 
     }
 
-    private void onMadeViewClicked(View view, Post post) {
-        onButtonPressed(post);
+    private void onMadeViewClicked(View view, String postId) {
+        onButtonPressed(postId);
     }
 
 
@@ -266,7 +315,7 @@ public class DashboardFragment extends Fragment {
         dashboardRecylcerView.setLayoutManager(linearLayoutManager);
         dashboardRecylcerView.setHasFixedSize(true);
 
-        postAdapter = new GenericAdapter<Post>(getContext(), postList) {
+        postAdapter = new GenericAdapter<ServerPost>(getContext(), serverPosts) {
             @Override
             public RecyclerView.ViewHolder setViewHolder(ViewGroup parent) {
                 final View view = LayoutInflater.from(getContext()).inflate(R.layout.row_list_item, parent, false);
@@ -276,20 +325,44 @@ public class DashboardFragment extends Fragment {
             }
 
             @Override
-            public void onBindData(final RecyclerView.ViewHolder holder, final Post val, int position) {
+            public void onBindData(final RecyclerView.ViewHolder holder, final ServerPost val, final int position) {
                 final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
 
-                itemViewHolder.profileImageView.setImageBitmap(profileBitmaps.get(position));
-                itemViewHolder.professoinText.setText(val.getProfession());
-                itemViewHolder.titleText.setText(val.getTitleText());
-                itemViewHolder.personNameText.setText(val.getUserName());
-                itemViewHolder.durationText.setText(val.getPostDuration() + " ago");
-                itemViewHolder.likeText.setText(val.getPostLikes() + " Likes");
-                itemViewHolder.madeText.setText(val.getMade().size() + " Mades");
-                itemViewHolder.commentText.setText(val.getComments().size() + " Comments");
+//                itemViewHolder.profileImageView.setImageBitmap(profileBitmaps.get(position));
+//                itemViewHolder.professoinText.setText(val.getProfession());
+                if (val.getType().equalsIgnoreCase("video")) {
+                    itemViewHolder.playIV.setVisibility(View.VISIBLE);
+                } else {
+                    itemViewHolder.playIV.setVisibility(View.GONE);
+                }
+
+
+/*                try {
+
+                    long postTime = simpleDateFormat.parse(val.getCreatedAt()).getTime()
+                    long diff = currentTime - postTime;
+                    long diffMinutes = diff / (60 * 1000) % 60;
+                    long diffHours = diff / (60 * 60 * 1000) % 24;
+                    long diffDays = diff / (24 * 60 * 60 * 1000);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }*/
+
+                itemViewHolder.titleText.setText(val.getTitle());
+                itemViewHolder.personNameText.setText(val.getUser().getName());
+//                itemViewHolder.durationText.setText(val.getPostDuration() + " ago");
+                itemViewHolder.likeText.setText(val.getLikes() + " Likes");
+                itemViewHolder.madeText.setText("0");
+                itemViewHolder.commentText.setText(val.getComments() + " Comments");
+                if (preferences.getUserId().equalsIgnoreCase(val.getUser().getUserId())) {
+                    itemViewHolder.subscribeBtn.setVisibility(View.GONE);
+                }
+
 
                 itemViewHolder.postImageView.setVisibility(View.VISIBLE);
-                itemViewHolder.postImageView.setImageBitmap(imageMap.get(val.getSource()));
+                Picasso.with(getContext()).load(val.getThumbnail()).resize(200, 200).into(itemViewHolder.postImageView);
+//                itemViewHolder.postImageView.setImageBitmap(imageMap.get(val.getSource()));
 //                if (val.getSourceType() == 1) {
 
 //                    itemViewHolder.postImageView.setVisibility(View.VISIBLE);
@@ -309,9 +382,27 @@ public class DashboardFragment extends Fragment {
                 itemViewHolder.postImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onPostViewClicked(v, val);
+                        Log.d(TAG, "onClick: val.getPostId(): " + val.getPostId());
+                        onPostViewClicked(v, val.getPostId());
                     }
                 });
+                itemViewHolder.madeImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG, "onClick: val.getPostId(): " + val.getPostId());
+                        onMadeViewClicked(v, val.getPostId());
+                    }
+                });
+
+                itemViewHolder.commentImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG, "onClick: val.getPostId(): " + val.getPostId());
+                        onCommentViewClicked(v, val.getPostId());
+                    }
+                });
+
+                /*
 
                 itemViewHolder.likeImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -320,19 +411,7 @@ public class DashboardFragment extends Fragment {
                     }
                 });
 
-                itemViewHolder.madeImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onMadeViewClicked(v, val);
-                    }
-                });
-
-                itemViewHolder.commentImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onCommentViewClicked(v, val);
-                    }
-                });
+                */
 
             }
 
@@ -360,16 +439,18 @@ public class DashboardFragment extends Fragment {
     private class ItemViewHolder extends RecyclerView.ViewHolder {
         private View layoutRoot, socialContainer;
         private com.github.siyamed.shapeimageview.CircularImageView profileImageView;
-        private ImageView postImageView, madeImageView, commentImageView, likeImageView;
+        private ImageView postImageView, madeImageView, commentImageView, likeImageView, playIV;
         private TextView professoinText, personNameText,
                 durationText, commentText, madeText,
                 titleText, likeText;
+        private Button subscribeBtn;
 
 
         public ItemViewHolder(View itemView) {
             super(itemView);
             layoutRoot = itemView;
             profileImageView = layoutRoot.findViewById(R.id.profileImageView);
+            playIV = layoutRoot.findViewById(R.id.playIV);
             postImageView = layoutRoot.findViewById(R.id.postImageView);
             professoinText = layoutRoot.findViewById(R.id.professoinText);
             personNameText = layoutRoot.findViewById(R.id.personNameText);
@@ -382,9 +463,10 @@ public class DashboardFragment extends Fragment {
             commentText = socialContainer.findViewById(R.id.commentText);
             madeText = socialContainer.findViewById(R.id.madeText);
             likeText = socialContainer.findViewById(R.id.likeText);
+            subscribeBtn = socialContainer.findViewById(R.id.subscribeBtn);
             postImageView.setVisibility(View.VISIBLE);
             layoutRoot.findViewById(R.id.btnContainer).setVisibility(View.GONE);
-            layoutRoot.findViewById(R.id.frame_fragment).setVisibility(View.GONE);
+//            layoutRoot.findViewById(R.id.frame_fragment).setVisibility(View.GONE);
 
 
         }
@@ -392,10 +474,10 @@ public class DashboardFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Post post) {
+    public void onButtonPressed(String postId) {
         if (mListener != null) {
             Bundle args = new Bundle();
-            args.putSerializable("post", post);
+            args.putString("postId", postId);
             mListener.onDashboardFragmentInteraction(args);
         }
     }

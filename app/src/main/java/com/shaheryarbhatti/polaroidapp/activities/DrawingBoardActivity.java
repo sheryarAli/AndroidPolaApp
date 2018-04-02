@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -26,6 +27,10 @@ import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.shaheryarbhatti.polaroidapp.R;
 import com.shaheryarbhatti.polaroidapp.utilities.UtilImage;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Locale;
 
 
@@ -54,6 +59,7 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
     private int drawableId;
     private float restoredScale;
     private UtilImage utilImage;
+    private String imageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +76,19 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle("Draw");
         }
-        imageView = (ImageView) findViewById(R.id.drawingBoardImageView);
+        imageView = findViewById(R.id.drawingBoardImageView);
         toolbarContainer = findViewById(R.id.toolbarContainer);
         zoomContorlContainer = findViewById(R.id.zoomContorlContainer);
 
-        zoomInButton = (ImageButton) findViewById(R.id.zoomInButton);
-        zoomOutButton = (ImageButton) findViewById(R.id.zoomOutButton);
-        lockBtn = (ImageButton) findViewById(R.id.lockBtn);
-        zoomText = (TextView) findViewById(R.id.zoomText);
+        zoomInButton = findViewById(R.id.zoomInButton);
+        zoomOutButton = findViewById(R.id.zoomOutButton);
+        lockBtn = findViewById(R.id.lockBtn);
+        zoomText = findViewById(R.id.zoomText);
+        imageUrl = getIntent().getStringExtra("imageUrl");
+        new LoadImageTask().execute();
+//        handleImageLoad();
 
-
-        String imagePath = getIntent().getStringExtra("image");
+        /*String imagePath = getIntent().getStringExtra("image");
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -110,7 +118,7 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
         comboImage.drawBitmap(bmScalled, 0f, 0f, null);
         comboImage.drawBitmap(bitmapScalled, 0f, 0f, null);
 
-        imageView.setImageBitmap(cs);
+        imageView.setImageBitmap(cs);*/
 
 
         attacher = new PhotoViewAttacher(imageView);
@@ -124,6 +132,75 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
         lockBtn.setOnClickListener(this);
 
     }
+
+
+    private class LoadImageTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... aVoid) {
+            try {
+                URL url = new URL(imageUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+//                connection.getHeaderField()
+                connection.connect();
+                BufferedInputStream input = new BufferedInputStream(connection.getInputStream());
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = false;
+
+
+                bm = BitmapFactory.decodeStream(input, null, options);
+                input.close();
+                connection.disconnect();
+                Log.d(TAG, "doInBackground: for debugging");
+
+
+                float aspectRatio = (float) options.outWidth / (float) options.outHeight;
+
+                int height = Math.round(getResources().getDisplayMetrics().widthPixels / aspectRatio);
+
+                options.inSampleSize = (int) getScale(options.outWidth, options.outHeight, getResources().getDisplayMetrics().widthPixels, height);
+                options.inJustDecodeBounds = false;
+
+//                input.reset();
+                URL url2 = new URL(imageUrl);
+                HttpURLConnection connection2 = (HttpURLConnection) url2.openConnection();
+                connection2.setDoInput(true);
+//                connection.getHeaderField()
+                connection2.connect();
+                BufferedInputStream input2 = new BufferedInputStream(connection2.getInputStream());
+                bm = BitmapFactory.decodeStream(input2, null, options);
+
+                Log.d(TAG, "doInBackground: for debugging");
+
+                bmScalled = getResizedBitmap(bm, getResources().getDisplayMetrics().widthPixels, height);//Resources.DisplayMetrics.HeightPixels);
+
+                grid = BitmapFactory.decodeResource(getResources(), R.drawable.grid4_grey);
+                bitmapScalled = Bitmap.createScaledBitmap(grid, getResources().getDisplayMetrics().widthPixels, height, true);
+                cs = Bitmap.createBitmap(getResources().getDisplayMetrics().widthPixels, height, Bitmap.Config.ARGB_8888);
+                comboImage = new Canvas(cs);
+
+                comboImage.drawBitmap(bmScalled, 0f, 0f, null);
+                comboImage.drawBitmap(bitmapScalled, 0f, 0f, null);
+                input2.close();
+                connection2.disconnect();
+
+
+            } catch (IOException e) {
+                // Log exception
+                return null;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            imageView.setImageBitmap(cs);
+        }
+    }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -150,6 +227,7 @@ public class DrawingBoardActivity extends AppCompatActivity implements View.OnCl
 
     private void setBm(int imageSourceType, BitmapFactory.Options options, String imagePath) {
         if (imageSourceType == 1) {
+//            BitmapFactory.decodeStream()
             bm = BitmapFactory.decodeFile(imagePath, options);
 
         } else {

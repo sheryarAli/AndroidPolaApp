@@ -62,6 +62,7 @@
             android:visibility="gone">
 
             <LinearLayout
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/spacing_large"
                 android:paddingRight="@dimen/spacing_large"
@@ -111,6 +112,8 @@
                     android:paddingBottom="@dimen/spacing_middle"
                     android:hint="Write A Comment"
                     android:textSize="@dimen/font_large"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"
                     android:background="@drawable/comment_edt_background"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

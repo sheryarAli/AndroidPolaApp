@@ -31,6 +31,7 @@ import com.kbeanie.multipicker.api.entity.ChosenVideo;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 import com.shaheryarbhatti.polaroidapp.R;
+import com.shaheryarbhatti.polaroidapp.preferences.LocalStoragePreferences;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,6 +64,7 @@ public class PostCreationActivity extends AppCompatActivity implements View.OnCl
     private ImagePicker imagePicker;
     private VideoPicker videoPicker;
     private ImageView postImageView;
+    private LocalStoragePreferences preferences;
     private String userToken = "", thumbnailUriStr, fileUriStr, sourceType, fileType;
 
 
@@ -70,6 +72,7 @@ public class PostCreationActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_creation);
+        preferences = new LocalStoragePreferences(this);
         fileUploadUrl = getResources().getString(R.string.file_upload_test_url);
         closeBtn = findViewById(R.id.closeBtn);
         publishBtn = findViewById(R.id.publishBtn);
@@ -88,7 +91,7 @@ public class PostCreationActivity extends AppCompatActivity implements View.OnCl
 
                     }
                 });
-        userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhYWU1Y2YxMDJiODI5MjZmODA2NjZlMSIsInByb2ZpbGVfcGljIjoic29tZV91cmwiLCJmaXJzdF9uYW1lIjoiTXVoYW1tYWQiLCJsYXN0X25hbWUiOiJQYXRlbCIsIm1pZGRsZV9uYW1lIjoiQWJkdWxNb2l6IiwibW9iaWxlX251bWJlciI6Iis5MjMzMjM0Nzg4MzIiLCJlbWFpbCI6ImFiZHVsbW9pemVuZysxMkBnbWFpbC5jb20iLCJkb2IiOiIxOTkyLTEwLTE0VDE5OjAwOjAwLjAwMFoiLCJ0eXBlIjoiYWRtaW4iLCJpYXQiOjE1MjEzODg1OTYsImV4cCI6MTU4MTM4ODUzNn0.l6XQcSGN7QvxOnnzkTNQByCAmIoHxtDj6FKxRX-2fUw";
+        userToken = preferences.getToken();
         closeBtn.setOnClickListener(this);
         publishBtn.setOnClickListener(this);
         addMediaBtn.setOnClickListener(this);
@@ -120,9 +123,9 @@ public class PostCreationActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        /*if (v == closeBtn) {
-
-        }*/
+        if (v == closeBtn) {
+            finish();
+        }
         if (v == publishBtn) {
             handleUploading();
 
@@ -135,11 +138,12 @@ public class PostCreationActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onImagesChosen(List<ChosenImage> list) {
         pickedFileThumbPath = list.get(0).getThumbnailPath();
+
         Log.d(TAG, "onImagesChosen: pickedFileThumbPath:" + pickedFileThumbPath);
         pickedFilePath = list.get(0).getOriginalPath();
         sourceType = "IMAGE";
         fileType = "POST-IMAGE";
-        updateImageView(pickedFileThumbPath);
+        updateImageView(pickedFilePath);
 
     }
 
@@ -226,6 +230,8 @@ public class PostCreationActivity extends AppCompatActivity implements View.OnCl
                             JSONObject jsonObject = new JSONObject(response);
                             boolean isSuccess = jsonObject.getBoolean("success");
                             if (isSuccess) {
+                                Log.d(TAG, "onResponse: Post Created");
+                                finish();
 
                             }
                         } catch (JSONException e) {

@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -46,6 +48,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     final int PERMS_REQUEST_CODE = 200;
     static final int OPEN_MEDIA_PICKER = 1;
     private LocalStoragePreferences preferences;
+    private Toolbar toolbar;
 
     public void pickDate(Context context, final EditText editText) {
 
@@ -67,16 +70,20 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        ((ImageView) toolbar.findViewById(R.id.logoImageView)).setVisibility(View.GONE);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         nameEdt = findViewById(R.id.nameEdt);
         genderRg = findViewById(R.id.genderRg);
-//        mnameEdt =  findViewById(R.id.mnameEdt);
-//        lnameEdt =  findViewById(R.id.lnameEdt);
-//        mnumberEdt =  findViewById(R.id.mnumberEdt);
+
         dobEdt = findViewById(R.id.dobEdt);
-//        genderEdt =  findViewById(R.id.genderEdt);
+
         emailEdt = findViewById(R.id.emailEdt);
         passwordEdt = findViewById(R.id.passwordEdt);
-//        takePhotoImageView =  findViewById(R.id.takePhotoImageView);
         signupBtn = findViewById(R.id.signupBtn);
 
         preferences = new LocalStoragePreferences(this);
@@ -107,18 +114,60 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 .start();*/
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private boolean validateUi() {
+        if (nameEdt.getText().toString().isEmpty()) {
+            nameEdt.setError("Name Required");
+            return false;
+        }
+        if (emailEdt.getText().toString().isEmpty()) {
+            emailEdt.setError("Email Required");
+            return false;
+        }
+        if (passwordEdt.getText().toString().isEmpty()) {
+            passwordEdt.setError("Password Required");
+            return false;
+        }
+        if (dobEdt.getText().toString().isEmpty()) {
+            dobEdt.setError("Date of Birth Required");
+            return false;
+        }
+        if (!isEmailValid(emailEdt.getText().toString())) {
+            emailEdt.setError("Invalid Email");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
 
     @Override
     public void onClick(View v) {
         if (v == signupBtn) {
-            String pushToken = FirebaseInstanceId.getInstance().getToken();
-            String gender = "female";
-            if (genderRg.getCheckedRadioButtonId() == R.id.maleRadio) {
-                gender = "male";
+            if (validateUi()) {
+                String pushToken = FirebaseInstanceId.getInstance().getToken();
+                String gender = "female";
+                if (genderRg.getCheckedRadioButtonId() == R.id.maleRadio) {
+                    gender = "male";
+                }
+
+                handleSignUp(nameEdt.getText().toString(), emailEdt.getText().toString(),
+                        passwordEdt.getText().toString(), dobEdt.getText().toString(), gender, pushToken);
             }
 
-            handleSignUp(nameEdt.getText().toString(), emailEdt.getText().toString(),
-                    passwordEdt.getText().toString(), dobEdt.getText().toString(), gender, pushToken);
         }
         if (v == dobEdt) {
             pickDate(this, dobEdt);
@@ -194,6 +243,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                                 preferences.setEmail(userObj.getString("email"));
                                 preferences.setDOB(userObj.getString("dob"));
                                 startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                                finish();
                             }
 
                         } catch (JSONException e) {

@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     CharSequence takePhotoMenu[] = new CharSequence[]{"Add Photo From Library", "Take A Photo"};
     private UtilImage utilImage;
     boolean doubleBackToExitPressedOnce = false;
+    private FloatingActionButton fabAdd;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -69,12 +71,19 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         tabs = findViewById(R.id.tabs);
         toolbar = findViewById(R.id.toolbar);
         viewPager = findViewById(R.id.viewpager);
+        fabAdd = findViewById(R.id.fab_add);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         MainFragmentPagerAdapter adapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(1);
         tabs.setupWithViewPager(viewPager);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, PostCreationActivity.class));
+            }
+        });
 
 
     }
